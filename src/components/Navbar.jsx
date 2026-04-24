@@ -15,8 +15,8 @@ export default function Navbar() {
         {/* Logo */}
         <div className="text-lg font-bold flex items-center gap-1">
           <span>🎓</span>
-          <span className="text-gray-800">Scholar</span>
-          <span className="text-orange-500">Path</span>
+          <span className="text-gray-800">Smart</span>
+          <span className="text-orange-500">Scholarhisp</span>
         </div>
 
         {/* Desktop Links */}
@@ -53,8 +53,8 @@ export default function Navbar() {
         {/* Top */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div className="text-lg font-bold flex items-center gap-1">
-            🎓 <span className="text-gray-800">Scholar</span>
-            <span className="text-orange-500">Path</span>
+            🎓 <span className="text-gray-800">Smart</span>
+            <span className="text-orange-500">Scholarhsip</span>
           </div>
 
           <button onClick={() => setOpen(false)}>

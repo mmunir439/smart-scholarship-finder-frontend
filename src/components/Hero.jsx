@@ -1,3 +1,5 @@
+"use client"
+import Link from "next/link"
 export default function Hero() {
     return (
         <section className="bg-[#0b1d3a] text-white px-10 py-20 flex flex-col md:flex-row items-center justify-between">
@@ -26,13 +28,13 @@ export default function Hero() {
 
                 {/* Buttons */}
                 <div className="flex gap-4 mb-6">
-                    <button className="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-md font-semibold">
+                    <Link href={"/register"} className="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-md font-semibold">
                         Get Started Free →
-                    </button>
+                    </Link>
 
-                    <button className="border border-gray-500 px-6 py-3 rounded-md hover:border-white">
+                    <Link href={"/scholarships"} className="border border-gray-500 px-6 py-3 rounded-md hover:border-white">
                         Browse Scholarships
-                    </button>
+                    </Link>
                 </div>
 
                 {/* Rating */}

@@ -5,7 +5,8 @@ import axios from "../utils/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-
+import Footer from "@/components/Footer"
+import Navbar from "@/components/Navbar"
 export default function Register() {
   const router = useRouter();
 
@@ -54,6 +55,9 @@ export default function Register() {
   };
 
   return (
+    <>
+       <Navbar/>
+     
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
 
       <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
@@ -73,7 +77,7 @@ export default function Register() {
             <label className="text-sm">Full name</label>
             <input
               name="name"
-              placeholder="Ayesha Khan"
+              placeholder="Diini Isaq Farah"
               value={form.name}
               onChange={handleChange}
               className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
@@ -85,7 +89,7 @@ export default function Register() {
             <label className="text-sm">Email</label>
             <input
               name="email"
-              placeholder="you@example.com"
+              placeholder="diini439@gmail.com"
               value={form.email}
               onChange={handleChange}
               className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
@@ -116,8 +120,8 @@ export default function Register() {
           <button
             disabled={loading}
             className={`w-full py-3 rounded-lg font-semibold text-white transition ${loading
-                ? "bg-gray-400 cursor-not-allowed"
-                : "bg-orange-500 hover:bg-orange-600"
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-orange-500 hover:bg-orange-600"
               }`}
           >
             {loading ? "Creating account..." : "Get started free"}
@@ -132,5 +136,7 @@ export default function Register() {
         </p>
       </div>
     </div>
+      <Footer/>
+    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
-
+import Link from "next/link"
 export default function Footer() {
     return (
         <footer className="bg-[#0b1d3a] text-white pt-16 pb-8">
@@ -57,9 +57,9 @@ export default function Footer() {
                     <div>
                         <h3 className="text-orange-500 font-semibold mb-4">EXPLORE</h3>
                         <ul className="space-y-2 text-gray-300">
-                            <li className="hover:text-orange-400 cursor-pointer">Scholarships</li>
-                            <li className="hover:text-orange-400 cursor-pointer">How It Works</li>
-                            <li className="hover:text-orange-400 cursor-pointer">Get Started</li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/scholarships"}>Scholarships</Link></li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/how-it-works"}>How It Works</Link></li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/register"}>Get Started</Link></li>
                         </ul>
                     </div>
 
@@ -67,9 +67,9 @@ export default function Footer() {
                     <div>
                         <h3 className="text-orange-500 font-semibold mb-4">COMPANY</h3>
                         <ul className="space-y-2 text-gray-300">
-                            <li className="hover:text-orange-400 cursor-pointer">About</li>
-                            <li className="hover:text-orange-400 cursor-pointer">Contact</li>
-                            <li className="hover:text-orange-400 cursor-pointer">Privacy</li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/about"}>About</Link></li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/contact"}>Contact</Link></li>
+                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/privacy"}>Privacy</Link></li>
                         </ul>
                     </div>
 

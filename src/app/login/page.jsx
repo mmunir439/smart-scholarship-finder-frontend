@@ -1,9 +1,8 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../utils/axios";
-import { setToken } from "../utils/token";
+import { setToken, setUser } from "../utils/token";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer"
@@ -35,12 +34,22 @@ export default function Login() {
 
       const res = await api.post("/user/login", form);
 
+      // ✅ store token in sessionStorage
       setToken(res.data.token);
+
+      // ✅ store user info in sessionStorage
+      setUser(res.data.user);
+
+      const role = res.data.user.role;
 
       toast.success("Login successful 🎉");
 
       setTimeout(() => {
-        router.push("/dashboard");
+        if (role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       }, 1200);
 
     } catch (err) {
@@ -72,7 +81,7 @@ export default function Login() {
               <label className="text-sm">Email</label>
               <input
                 name="email"
-                placeholder="you@example.com"
+                placeholder="diini439@gmail.com"
                 value={form.email}
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
