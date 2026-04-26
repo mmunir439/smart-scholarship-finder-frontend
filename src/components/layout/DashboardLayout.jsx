@@ -19,10 +19,11 @@ export default function DashboardLayout({ children }) {
 
     return (
         <div className="flex min-h-screen">
+
             {/* Sidebar */}
             <aside
                 className={`bg-[#0b1d3a] text-white w-64 p-5 space-y-6 fixed top-0 left-0 h-full z-50 transition-transform
-  ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+        ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
             >
                 <h1 className="text-xl font-bold text-gold">ScholarPath</h1>
 
@@ -31,8 +32,8 @@ export default function DashboardLayout({ children }) {
                         <Link key={item.name} href={item.href}>
                             <div
                                 className={`p-3 rounded-lg cursor-pointer ${path === item.href
-                                    ? "bg-white/10 border-l-4 border-gold"
-                                    : "hover:bg-white/5"
+                                        ? "bg-white/10 border-l-4 border-gold"
+                                        : "hover:bg-white/5"
                                     }`}
                             >
                                 {item.name}
@@ -55,6 +56,7 @@ export default function DashboardLayout({ children }) {
                 {children}
             </main>
 
+            {/* Floating UI */}
             <div className="fixed bottom-6 left-6 bg-white shadow px-4 py-2 rounded-full text-sm">
                 🎧 Voice Guide
             </div>

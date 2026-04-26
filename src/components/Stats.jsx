@@ -3,6 +3,9 @@
 import CountUp from "react-countup";
 
 export default function Stats() {
+  const getProfile=()=>{
+    
+  }
   return (
     <section className="bg-[#0b1d3a] py-16 text-center text-white">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-10">
