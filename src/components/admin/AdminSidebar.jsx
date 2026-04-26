@@ -43,7 +43,7 @@ export default function AdminSidebar() {
         <aside className="fixed left-0 top-0 h-full w-64 bg-[#0b1d3a] text-white flex flex-col">
             {/* Logo */}
             <div className="px-6 py-5 border-b border-white/10">
-                <h1 className="text-lg font-bold text-orange-400">🎓 ScholarFinder</h1>
+                <h1 className="text-lg font-bold text-orange-400">🎓 Smart Scholarhiship</h1>
                 <p className="text-xs text-gray-400 mt-0.5">Admin Panel</p>
             </div>
 

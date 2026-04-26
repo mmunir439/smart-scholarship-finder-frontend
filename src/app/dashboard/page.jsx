@@ -8,6 +8,7 @@ import {
     DegreeChart,
     EligibilityChart,
 } from "@/components/dashboard/Charts";
+import AcademicProfileCard from "@/components/AcademicProfileCard"
 import axios from "@/app/utils/axios"
 import { RecentMatches } from "@/components/dashboard/RecentMatches";
 import { ProfileCompletion } from "@/components/dashboard/ProfileCompletion";
@@ -47,6 +48,7 @@ export default function Page() {
                 </h1>
                 <p className="text-gray-500">Friday, April 24</p>
             </div>
+            <AcademicProfileCard />
 
             {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
