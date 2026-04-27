@@ -1,6 +1,23 @@
 "use client";
 import Link from "next/link";
+import axios from "@/app/utils/axios"
+import { useEffect, useState } from "react";
+
 export default function Sections() {
+    const [scholarships, setScholarships] = useState([]);
+    const topScholarships = scholarships.slice(0, 3);
+    const getallAllScholarship = async () => {
+        try {
+            const res = await axios.get("/admin/scholarships"); // your API route
+            setScholarships(res.data.scholarships || res.data.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
+    useEffect(() => {
+        getallAllScholarship();
+    }, []);
     return (
         <section className="bg-gray-50 py-20 space-y-24">
 
@@ -25,37 +42,16 @@ export default function Sections() {
                 {/* Cards */}
                 <div className="grid md:grid-cols-3 gap-6">
 
-                    {[
-                        {
-                            country: "US",
-                            name: "Fulbright Foreign Student Program",
-                            match: "94%",
-                            date: "May 15, 2026",
-                        },
-                        {
-                            country: "DE",
-                            name: "DAAD Development-Related Scholarship",
-                            match: "88%",
-                            date: "Aug 30, 2026",
-                        },
-                        {
-                            country: "GB",
-                            name: "Chevening Scholarships",
-                            match: "91%",
-                            date: "Nov 5, 2026",
-                        },
-                    ].map((item, i) => (
-                        <div
-                            key={i}
-                            className="bg-white p-6 rounded-2xl shadow-sm border hover:shadow-lg transition duration-300 transform hover:-translate-y-2 animate-float"
-                            style={{ animationDelay: `${i * 0.3}s` }}
-                        >
+                    {topScholarships.map((item, i) => (
+                        <div key={item._id} className="bg-white p-6 rounded-2xl shadow-sm border">
+
                             <div className="flex justify-between mb-4">
                                 <p className="font-semibold">
                                     {item.country} <span className="text-gray-500 text-sm">Country</span>
                                 </p>
+
                                 <span className="bg-orange-100 text-orange-500 text-xs px-3 py-1 rounded-full">
-                                    {item.match} match
+                                    {item.degreeLevel}
                                 </span>
                             </div>
 
@@ -64,17 +60,24 @@ export default function Sections() {
                             </h3>
 
                             <div className="flex gap-3 text-xs text-gray-500 mb-6">
-                                <span className="bg-gray-100 px-3 py-1 rounded-full">Master’s</span>
                                 <span className="bg-gray-100 px-3 py-1 rounded-full">
-                                    {item.date}
+                                    {item.degreeLevel}
+                                </span>
+
+                                <span className="bg-gray-100 px-3 py-1 rounded-full">
+                                    {item.deadline}
                                 </span>
                             </div>
 
-                            <button className="w-full border rounded-md py-2 text-sm hover:bg-gray-100">
+                            <Link className="w-full border rounded-md py-2 text-sm hover:bg-gray-100" href={item.link} target="_blank">
+
                                 View details
-                            </button>
+
+                            </Link>
+
                         </div>
                     ))}
+
                 </div>
             </div>
 
