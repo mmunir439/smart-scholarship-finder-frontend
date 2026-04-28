@@ -1,85 +1,58 @@
 "use client";
+
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
-import Link from "next/link"
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+
 export default function Footer() {
+    const { t } = useTranslation();
+
     return (
         <footer className="bg-[#0b1d3a] text-white pt-16 pb-8">
             <div className="max-w-7xl mx-auto px-6 lg:px-10">
 
-                {/* Top Section */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-10">
+                <div className="grid md:grid-cols-3 gap-10 mb-10">
 
-                    {/* Left */}
+                    {/* LEFT */}
                     <div>
                         <h2 className="text-lg font-bold mb-3">
-                            🎓 <span>Scholar</span>
-                            <span className="text-orange-500">Path</span>
+                            🎓 Scholar<span className="text-orange-500">Path</span>
                         </h2>
 
                         <p className="text-gray-300 mb-6">
-                            Empowering Pakistani students to reach the world.
+                            {t("footer.desc")}
                         </p>
+                    </div>
 
-                        {/* Social Icons */}
-                        <div className="flex gap-4">
-                            {[
-                                {
-                                    icon: <FaFacebookF />,
-                                    link: "https://www.facebook.com/profile.php?id=100085467492304",
-                                },
-                                {
-                                    icon: <FaTwitter />,
-                                    link: "https://github.com/mmunir439",
-                                },
-                                {
-                                    icon: <FaInstagram />,
-                                    link: "https://github.com/mmunir439",
-                                },
-                                {
-                                    icon: <FaLinkedinIn />,
-                                    link: "https://www.linkedin.com/in/munirdev",
-                                },
-                            ].map((item, i) => (
-                                <a
-                                    key={i}
-                                    href={item.link}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 flex items-center justify-center border border-gray-500 rounded-full hover:border-orange-500 hover:text-orange-400 hover:bg-white/5 transition"
-                                >
-                                    {item.icon}
-                                </a>
-                            ))}
-                        </div>
-                    </div> {/* ✅ FIX: closed left section */}
-
-                    {/* Explore */}
+                    {/* EXPLORE */}
                     <div>
-                        <h3 className="text-orange-500 font-semibold mb-4">EXPLORE</h3>
-                        <ul className="space-y-2 text-gray-300">
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/scholarships"}>Scholarships</Link></li>
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/how-it-works"}>How It Works</Link></li>
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/register"}>Get Started</Link></li>
+                        <h3 className="text-orange-500 font-semibold mb-4">
+                            {t("footer.explore")}
+                        </h3>
+                        <ul className="space-y-2">
+                            <li><Link href="/scholarships">{t("footer.scholarships")}</Link></li>
+                            <li><Link href="/how-it-works">{t("footer.how")}</Link></li>
+                            <li><Link href="/register">{t("footer.start")}</Link></li>
                         </ul>
                     </div>
 
-                    {/* Company */}
+                    {/* COMPANY */}
                     <div>
-                        <h3 className="text-orange-500 font-semibold mb-4">COMPANY</h3>
-                        <ul className="space-y-2 text-gray-300">
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/about"}>About</Link></li>
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/contact"}>Contact</Link></li>
-                            <li className="hover:text-orange-400 cursor-pointer"><Link href={"/privacy"}>Privacy</Link></li>
+                        <h3 className="text-orange-500 font-semibold mb-4">
+                            {t("footer.company")}
+                        </h3>
+                        <ul className="space-y-2">
+                            <li><Link href="/about">{t("footer.about")}</Link></li>
+                            <li><Link href="/contact">{t("footer.contact")}</Link></li>
+                            <li><Link href="/privacy">{t("footer.privacy")}</Link></li>
                         </ul>
                     </div>
 
                 </div>
 
-                {/* Divider */}
-                <div className="border-t border-gray-600 pt-6 text-center text-gray-400 text-sm">
-                    © 2026 ScholarPath. All rights reserved.
+                <div className="text-center text-gray-400 text-sm">
+                    {t("footer.copy")}
                 </div>
-
             </div>
         </footer>
     );

@@ -1,11 +1,15 @@
 "use client";
 import "./globals.css";
-import "./i18n";
+import "../i18n";
+import LanguageSwitcher from "../components/LanguageSwitcher";
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html>
       <title>Smart Scholarhip Guidance System</title>
-      <body>{children}</body>
+      <body>
+        <LanguageSwitcher />
+        {children}
+      </body>
     </html>
   );
 }

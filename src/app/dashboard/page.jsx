@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState, useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import StatsCard from "@/components/dashboard/StatsCard";
@@ -8,10 +7,12 @@ import {
     DegreeChart,
     EligibilityChart,
 } from "@/components/dashboard/Charts";
+import { useTranslation } from "react-i18next";
 import AcademicProfileCard from "@/components/AcademicProfileCard";
 import axios from "@/app/utils/axios";
 
 export default function Page() {
+    const { t } = useTranslation();
     const [user, setUser] = useState({});
     const [eligibleData, setEligibleData] = useState([]);
     const today = new Date().toLocaleDateString("en-US", {
@@ -68,13 +69,13 @@ export default function Page() {
         <DashboardLayout>
             {/* Header */}
             <div className="bg-white border-b px-6 py-4 mb-6 rounded-lg shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-800">Dashboard</h2>
+                <h2 className="text-lg font-semibold text-gray-800">t("Dashboard")</h2>
             </div>
 
             {/* Greeting */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">
-                    Welcome back, {user?.name || "User"} 👋
+                   Welcome back, {user?.name || "User"} 👋
                 </h1>
                 <p className="text-gray-500">{today}</p>
             </div>

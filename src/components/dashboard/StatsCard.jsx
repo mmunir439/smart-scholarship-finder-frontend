@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 export default function StatsCard({ title, value }) {
+    const { t } = useTranslation();
     return (
         <div className="bg-white rounded-xl p-5 shadow-sm w-full">
             <p className="text-gray-500 text-sm">{title}</p>

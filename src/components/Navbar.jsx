@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Navbar() {
+  const { t } = useTranslation(); // ✅ ADD
   const [open, setOpen] = useState(false);
 
   return (
@@ -16,30 +18,27 @@ export default function Navbar() {
         <div className="text-lg font-bold flex items-center gap-1">
           <span>🎓</span>
           <span className="text-gray-800">Smart</span>
-          <span className="text-orange-500">Scholarhisp</span>
+          <span className="text-orange-500">Scholarship</span>
         </div>
 
         {/* Desktop Links */}
         <ul className="hidden md:flex items-center gap-6 text-sm text-gray-700">
-          <li><Link href="/">Home</Link></li>
-          <li><Link href="/scholarships">Scholarships</Link></li>
-          <li><Link href="/how-it-works">How It Works</Link></li>
-          <li><Link href="/login">Login</Link></li>
+          <li><Link href="/">{t("navbar.home")}</Link></li>
+          <li><Link href="/scholarships">{t("navbar.scholarships")}</Link></li>
+          <li><Link href="/how-it-works">{t("navbar.how")}</Link></li>
+          <li><Link href="/login">{t("navbar.login")}</Link></li>
           <li>
             <Link
               href="/register"
               className="bg-orange-500 text-white px-4 py-2 rounded-md font-semibold hover:bg-orange-600"
             >
-              Register
+              {t("navbar.register")}
             </Link>
           </li>
         </ul>
 
         {/* Mobile Hamburger */}
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(true)}
-        >
+        <button className="md:hidden" onClick={() => setOpen(true)}>
           <Menu size={24} />
         </button>
       </nav>
@@ -54,7 +53,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <div className="text-lg font-bold flex items-center gap-1">
             🎓 <span className="text-gray-800">Smart</span>
-            <span className="text-orange-500">Scholarhsip</span>
+            <span className="text-orange-500">Scholarship</span>
           </div>
 
           <button onClick={() => setOpen(false)}>
@@ -64,11 +63,25 @@ export default function Navbar() {
 
         {/* Links */}
         <div className="flex flex-col gap-5 px-6 py-6 text-gray-700 text-sm">
-          <Link href="/" onClick={() => setOpen(false)}>Home</Link>
-          <Link href="/scholarships" onClick={() => setOpen(false)}>Scholarships</Link>
-          <Link href="/dashboard" onClick={() => setOpen(false)}>Dashboard</Link>
-          <Link href="/how-it-works" onClick={() => setOpen(false)}>How It Works</Link>
-          <Link href="/login" onClick={() => setOpen(false)}>Login</Link>
+          <Link href="/" onClick={() => setOpen(false)}>
+            {t("navbar.home")}
+          </Link>
+
+          <Link href="/scholarships" onClick={() => setOpen(false)}>
+            {t("navbar.scholarships")}
+          </Link>
+
+          <Link href="/dashboard" onClick={() => setOpen(false)}>
+            {t("navbar.dashboard")}
+          </Link>
+
+          <Link href="/how-it-works" onClick={() => setOpen(false)}>
+            {t("navbar.how")}
+          </Link>
+
+          <Link href="/login" onClick={() => setOpen(false)}>
+            {t("navbar.login")}
+          </Link>
         </div>
 
         {/* Register Button */}
@@ -78,7 +91,7 @@ export default function Navbar() {
             onClick={() => setOpen(false)}
             className="block text-center bg-orange-500 text-white py-3 rounded-md font-semibold"
           >
-            Register
+            {t("navbar.register")}
           </Link>
         </div>
       </div>

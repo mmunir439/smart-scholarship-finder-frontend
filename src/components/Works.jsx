@@ -1,21 +1,27 @@
+"use client";
+
+import { useTranslation } from "react-i18next";
+
 export default function Works() {
+    const { t } = useTranslation();
+
     return (
         <section className="bg-white py-20">
             <div className="max-w-7xl mx-auto px-6 lg:px-10 text-center">
 
                 {/* Top Label */}
                 <p className="text-orange-500 text-sm font-semibold tracking-widest mb-4">
-                    HOW IT WORKS
+                    {t("works.label")}
                 </p>
 
                 {/* Heading */}
                 <h2 className="text-3xl md:text-5xl font-bold text-[#0b1d3a] mb-4">
-                    Three steps to your future
+                    {t("works.title")}
                 </h2>
 
                 {/* Subtext */}
                 <p className="text-gray-500 mb-16">
-                    From profile to acceptance — we guide you the whole way.
+                    {t("works.subtitle")}
                 </p>
 
                 {/* Steps */}
@@ -32,11 +38,11 @@ export default function Works() {
                         </div>
 
                         <h3 className="mt-6 text-lg font-semibold text-[#0b1d3a]">
-                            Enter Your Profile
+                            {t("works.step1_title")}
                         </h3>
 
                         <p className="text-gray-500 text-sm mt-2 max-w-xs">
-                            Share your academic background, interests, and goals in minutes.
+                            {t("works.step1_desc")}
                         </p>
                     </div>
 
@@ -51,11 +57,11 @@ export default function Works() {
                         </div>
 
                         <h3 className="mt-6 text-lg font-semibold text-[#0b1d3a]">
-                            AI Matches You
+                            {t("works.step2_title")}
                         </h3>
 
                         <p className="text-gray-500 text-sm mt-2 max-w-xs">
-                            Our engine ranks scholarships by your real eligibility — not guesses.
+                            {t("works.step2_desc")}
                         </p>
                     </div>
 
@@ -70,11 +76,11 @@ export default function Works() {
                         </div>
 
                         <h3 className="mt-6 text-lg font-semibold text-[#0b1d3a]">
-                            Apply with Confidence
+                            {t("works.step3_title")}
                         </h3>
 
                         <p className="text-gray-500 text-sm mt-2 max-w-xs">
-                            Get tailored guidance, deadlines, and document checklists.
+                            {t("works.step3_desc")}
                         </p>
                     </div>
 

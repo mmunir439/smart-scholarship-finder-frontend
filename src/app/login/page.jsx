@@ -1,13 +1,17 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../utils/axios";
 import { setToken, setUser } from "../utils/token";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import Footer from "@/components/Footer"
-import Navbar from "@/components/Navbar"
+import Footer from "@/components/Footer";
+import Navbar from "@/components/Navbar";
+import { useTranslation } from "react-i18next";
+
 export default function Login() {
+  const { t } = useTranslation(); // ✅ ADD THIS
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -26,7 +30,7 @@ export default function Login() {
     e.preventDefault();
 
     if (!form.email || !form.password) {
-      return toast.error("All fields are required");
+      return toast.error(t("login.error_required"));
     }
 
     try {
@@ -34,15 +38,12 @@ export default function Login() {
 
       const res = await api.post("/user/login", form);
 
-      // ✅ store token in sessionStorage
       setToken(res.data.token);
-
-      // ✅ store user info in sessionStorage
       setUser(res.data.user);
 
       const role = res.data.user.role;
 
-      toast.success("Login successful 🎉");
+      toast.success(t("login.success"));
 
       setTimeout(() => {
         if (role === "admin") {
@@ -53,7 +54,7 @@ export default function Login() {
       }, 1200);
 
     } catch (err) {
-      toast.error("Invalid email or password");
+      toast.error(t("login.error_invalid"));
     } finally {
       setLoading(false);
     }
@@ -64,24 +65,23 @@ export default function Login() {
       <Navbar />
 
       <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-
         <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
 
           <h2 className="text-3xl font-bold text-[#0b1d3a] mb-2">
-            Welcome back
+            {t("login.title")}
           </h2>
 
           <p className="text-gray-500 mb-6">
-            Log in to continue your scholarship journey.
+            {t("login.subtitle")}
           </p>
 
           <form onSubmit={handleSubmit} className="space-y-4">
 
             <div>
-              <label className="text-sm">Email</label>
+              <label className="text-sm">{t("login.email")}</label>
               <input
                 name="email"
-                placeholder="diini439@gmail.com"
+                placeholder={t("login.email_placeholder")}
                 value={form.email}
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
@@ -89,11 +89,11 @@ export default function Login() {
             </div>
 
             <div className="relative">
-              <label className="text-sm">Password</label>
+              <label className="text-sm">{t("login.password")}</label>
               <input
                 name="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="••••••••"
+                placeholder={t("login.password_placeholder")}
                 value={form.password}
                 onChange={handleChange}
                 className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
@@ -103,29 +103,31 @@ export default function Login() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-9 cursor-pointer text-sm text-gray-500"
               >
-                {showPassword ? "Hide" : "Show"}
+                {showPassword ? t("login.hide") : t("login.show")}
               </span>
             </div>
 
             <button
               disabled={loading}
               className={`w-full py-3 rounded-lg font-semibold text-white transition ${loading
-                ? "bg-gray-400"
-                : "bg-orange-500 hover:bg-orange-600"
+                  ? "bg-gray-400"
+                  : "bg-orange-500 hover:bg-orange-600"
                 }`}
             >
-              {loading ? "Logging in..." : "Log in"}
+              {loading ? t("login.loading") : t("login.button")}
             </button>
           </form>
 
           <p className="text-sm text-center text-gray-500 mt-6">
-            New here?{" "}
+            {t("login.new_here")}{" "}
             <Link href="/register" className="font-medium text-[#0b1d3a]">
-              Create an account
+              {t("login.create_account")}
             </Link>
           </p>
+
         </div>
       </div>
+
       <Footer />
     </>
   );

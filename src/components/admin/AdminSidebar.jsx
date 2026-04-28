@@ -17,9 +17,11 @@ const navItems = [
     { label: "Users", href: "/admin/users", icon: Users },
     { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
-
+import { useTranslation } from "react-i18next";
 export default function AdminSidebar() {
     const [user, setUser] = useState({});
+    const { t } = useTranslation();
+
     const getUser = async () => {
         try {
             const res = await axios.get("/user/getUser");
@@ -43,7 +45,7 @@ export default function AdminSidebar() {
         <aside className="fixed left-0 top-0 h-full w-64 bg-[#0b1d3a] text-white flex flex-col">
             {/* Logo */}
             <div className="px-6 py-5 border-b border-white/10">
-                <h1 className="text-lg font-bold text-orange-400">🎓 Smart Scholarhiship</h1>
+                <h1 className="text-lg font-bold text-orange-400">{t("🎓 Smart Scholarhiship")}</h1>
                 <p className="text-xs text-gray-400 mt-0.5">Admin Panel</p>
             </div>
 
@@ -62,7 +64,7 @@ export default function AdminSidebar() {
                                 }`}
                         >
                             <Icon size={18} />
-                            {label}
+                            {t("label")}
                         </Link>
                     );
                 })}
@@ -72,7 +74,7 @@ export default function AdminSidebar() {
             <div className="px-4 pb-6">
                 <button className="flex items-center gap-3 px-4 py-2.5 w-full rounded-lg text-sm text-gray-300 hover:bg-white/10 transition">
                     <LogOut size={18} />
-                    Logout
+                    {t("Logout")}
                 </button>
             </div>
         </aside>

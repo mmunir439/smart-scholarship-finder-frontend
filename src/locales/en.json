@@ -1,0 +1,261 @@
+{
+  "about": {
+    "hero_title": "Built for Pakistani Students, By Pakistani Students",
+    "hero_desc": "We understand the struggle of finding international scholarships — so we built the solution.",
+
+    "mission_quote": "Every deserving student deserves a chance, regardless of resources.",
+    "mission_desc1": "Smart Scholarship Guidance was created to remove the confusion and frustration students face when searching for scholarships abroad.",
+    "mission_desc2": "We combine structured data, intelligent matching, and a student-first approach to make opportunities accessible.",
+
+    "problem1": "Scholarship info is scattered across hundreds of websites",
+    "problem2": "Education consultants charge too much",
+    "problem3": "No personalized guidance for your specific profile",
+    "problem4": "Students waste months searching manually",
+
+    "step1": "Enter your academic profile",
+    "step2": "AI matches eligible scholarships",
+    "step3": "Apply with confidence",
+
+    "team_role": "Full Stack Developer — IIUI BSCS F22",
+
+    "value1": "Accessibility",
+    "value2": "Transparency",
+    "value3": "Student-First",
+    "value_desc": "We design everything with students in mind.",
+
+    "cta_title": "Ready to find your scholarship?",
+    "cta_btn": "Get Started Free"
+  },
+
+  "login": {
+    "title": "Welcome back",
+    "subtitle": "Log in to continue your scholarship journey.",
+
+    "email": "Email",
+    "email_placeholder": "Enter your email",
+
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+
+    "show": "Show",
+    "hide": "Hide",
+
+    "button": "Log in",
+    "loading": "Logging in...",
+
+    "new_here": "New here?",
+    "create_account": "Create an account",
+
+    "error_required": "All fields are required",
+    "error_invalid": "Invalid email or password",
+    "success": "Login successful 🎉"
+  },
+  "contact": {
+    "title": "We'd Love to Hear From You",
+    "subtitle": "Reach out — we respond within 24 hours.",
+
+    "name": "Full Name",
+    "email": "Email",
+    "message": "Message",
+
+    "subject1": "General Inquiry",
+    "subject2": "Scholarship Question",
+    "subject3": "Technical Issue",
+    "subject4": "Feedback",
+
+    "send": "Send Message",
+    "sending": "Sending...",
+    "success": "✔ Message sent! We'll get back to you soon.",
+
+    "email_info": "scholarhispguidance.iiui@gmail.com",
+    "location": "IIUI Islamabad",
+    "time": "Within 24 hours",
+
+    "faq1_q": "Is this platform free?",
+    "faq1_a": "Yes, completely free.",
+
+    "faq2_q": "Do you guarantee scholarships?",
+    "faq2_a": "No, guidance only.",
+
+    "faq3_q": "Which countries?",
+    "faq3_a": "USA & Europe.",
+
+    "map": "IIUI Islamabad, H-10, Pakistan"
+  },
+  "register": {
+    "title": "Create your account",
+    "subtitle": "Start matching with scholarships in minutes.",
+
+    "name": "Full name",
+    "name_placeholder": "Enter your full name",
+
+    "email": "Email",
+    "email_placeholder": "Enter your email",
+
+    "password": "Password",
+    "password_placeholder": "Enter your password",
+
+    "show": "Show",
+    "hide": "Hide",
+
+    "button": "Get started free",
+    "loading": "Creating account...",
+
+    "have_account": "Already have an account?",
+    "login": "Log in",
+
+    "error_name": "Name is required",
+    "error_email": "Invalid email",
+    "error_password": "Password must be at least 6 characters",
+
+    "success": "Account created successfully 🎉",
+    "failed": "Registration failed"
+  },
+  "privacy": {
+    "title": "Privacy Policy",
+    "subtitle": "Last updated: June 2025 • International Islamic University Islamabad",
+
+    "nav": {
+      "overview": "Overview",
+      "data_collected": "Information We Collect",
+      "data_use": "How We Use Your Info",
+      "data_storage": "Data Storage",
+      "web_scraping": "Web Scraping",
+      "cookies": "Cookies",
+      "third_party": "Third Party",
+      "rights": "Your Rights",
+      "changes": "Changes",
+      "contact": "Contact"
+    },
+
+    "overview_title": "Overview",
+    "overview": "ScholarPath is a student project developed at IIUI. We protect your data.",
+
+    "data_collected_title": "Information We Collect",
+    "data_collected": "Name, email, password (encrypted)\nAcademic profile data\nUsage data",
+
+    "data_use_title": "How We Use Your Information",
+    "data_use": "Match scholarships\nImprove user experience\nWe do NOT sell your data",
+
+    "data_storage_title": "Data Storage & Security",
+    "data_storage": "MongoDB, encryption, secure cloud hosting.",
+
+    "web_scraping_title": "Web Scraping",
+    "web_scraping": "Only public scholarship data is used.",
+
+    "cookies_title": "Cookies",
+    "cookies": "Minimal authentication cookies only.",
+
+    "third_party_title": "Third Party Services",
+    "third_party": "Vercel, MongoDB Atlas.",
+
+    "rights_title": "Your Rights",
+    "rights": "You can request deletion anytime.",
+
+    "changes_title": "Changes",
+    "changes": "Policy may update over time.",
+
+    "contact_title": "Contact Us",
+    "contact": "scholarpath.iiui@gmail.com\nIIUI Islamabad"
+  },
+  "scholarships": {
+    "title": "Scholarships",
+    "subtitle": "Curated international scholarships for Pakistani students.",
+    "found": "scholarships found",
+    "deadline": "Deadline",
+    "view": "View",
+    "load_more": "Load More"
+  },
+  "navbar": {
+    "home": "Home",
+    "scholarships": "Scholarships",
+    "how": "How It Works",
+    "login": "Login",
+    "register": "Register",
+    "dashboard": "Dashboard"
+  },
+  "stats": {
+    "scholarships": "SCHOLARSHIPS",
+    "students": "STUDENTS HELPED",
+    "countries": "COUNTRIES"
+  },
+
+  "sections": {
+    "featured": "FEATURED OPPORTUNITIES",
+    "title": "Top scholarships this season",
+    "view_all": "View all scholarships",
+    "view": "View details",
+    "cta_title": "Start your scholarship journey today",
+    "cta_desc": "Join thousands of students.",
+    "cta_btn": "Register Now"
+  },
+  "works": {
+    "label": "HOW IT WORKS",
+    "title": "Three steps to your future",
+    "subtitle": "From profile to acceptance — we guide you the whole way.",
+
+    "step1_title": "Enter Your Profile",
+    "step1_desc": "Share your academic background, interests, and goals in minutes.",
+
+    "step2_title": "AI Matches You",
+    "step2_desc": "Our engine ranks scholarships by your real eligibility — not guesses.",
+
+    "step3_title": "Apply with Confidence",
+    "step3_desc": "Get tailored guidance, deadlines, and document checklists."
+  },
+  "hero": {
+    "badge": "AI-powered scholarship matching",
+    "title": "Find Your Perfect",
+    "highlight": "International Scholarship",
+    "desc": "Discover and apply to scholarships.",
+    "start": "Get Started Free",
+    "browse": "Browse Scholarships",
+    "trust": "Trusted by 10,000+ students"
+  },
+
+  "footer": {
+    "desc": "Empowering students to reach the world.",
+    "explore": "EXPLORE",
+    "company": "COMPANY",
+    "scholarships": "Scholarships",
+    "how": "How It Works",
+    "start": "Get Started",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy",
+    "copy": "© 2026 ScholarPath. All rights reserved."
+  },
+
+  "dashboard": {
+    "nav": "Dashboard"
+  },
+
+  "profile": {
+    "title": "Academic Profile",
+    "subtitle": "Manage your academic details",
+    "cgpa": "CGPA",
+    "ielts": "IELTS",
+    "degree": "Degree Level",
+    "field": "Field",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete Profile"
+  },
+  "admin": {
+  "title": "Scholarships",
+  "add": "Add Scholarship",
+  "edit": "Edit Scholarship",
+  "save": "Save Changes",
+  "delete": "Delete",
+  "cancel": "Cancel",
+  "loading": "Loading...",
+  "name": "Name",
+  "country": "Country",
+  "degree": "Degree",
+  "deadline": "Deadline",
+  "actions": "Actions",
+  "field": "Field",
+  "delete_title": "Delete Scholarship",
+  "delete_msg": "Are you sure you want to delete?"
+}
+}

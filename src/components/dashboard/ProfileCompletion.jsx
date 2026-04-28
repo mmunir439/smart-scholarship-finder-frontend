@@ -1,4 +1,6 @@
+import { useTranslation } from "react-i18next";
 export function ProfileCompletion() {
+    const { t } = useTranslation();
     return (
         <div className="bg-white p-5 rounded-xl w-full">
             <h3 className="font-semibold mb-4">Profile Completion</h3>

@@ -1,5 +1,6 @@
 "use client";
-
+import { useTranslation } from "react-i18next";
+const { t } = useTranslation();
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell

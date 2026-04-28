@@ -1,0 +1,244 @@
+{
+  "about": {
+    "hero_title": "Loogu talagalay ardayda Pakistan, ay sameeyeen arday Pakistan",
+    "hero_desc": "Waxaan fahamsanahay dhibaatada helitaanka deeqaha waxbarasho ee caalamiga ah — sidaas darteed waxaan dhisnay xal.",
+
+    "mission_quote": "Arday kasta oo u qalma wuxuu mudan yahay fursad, iyadoon loo eegin xaaladdiisa.",
+    "mission_desc1": "Smart Scholarship Guidance waxaa loo sameeyay in laga saaro jahwareerka ay ardaydu la kulmaan marka ay raadinayaan deeqo waxbarasho.",
+    "mission_desc2": "Waxaan isku darnaa xog habaysan, AI, iyo hab arday ku saleysan.",
+
+    "problem1": "Macluumaadka deeqaha waxbarasho wuxuu ku kala yaal boqolaal bog",
+    "problem2": "La-taliyayaasha waxbarashada waxay qaadaan lacag badan",
+    "problem3": "Ma jirto hagid gaar ah oo ku saabsan profile-kaaga",
+    "problem4": "Ardaydu waxay lumiyaan waqti badan raadinta",
+
+    "step1": "Geli xogtaada waxbarasho",
+    "step2": "AI wuxuu kuu helaa deeqaha kugu habboon",
+    "step3": "Codso adigoo kalsooni leh",
+
+    "team_role": "Full Stack Developer — IIUI BSCS F22",
+
+    "value1": "Helitaan",
+    "value2": "Daahfurnaan",
+    "value3": "Ardayga Marka Hore",
+    "value_desc": "Waxaan wax walba u naqshadeynaa ardayda.",
+
+    "cta_title": "Diyaar ma u tahay inaad hesho deeqdaada?",
+    "cta_btn": "Bilow Bilaash"
+  },
+  "login": {
+    "title": "Ku soo dhawoow mar kale",
+    "subtitle": "Gal si aad u sii waddo safarkaaga deeqaha waxbarasho.",
+
+    "email": "Email",
+    "email_placeholder": "Geli emailkaaga",
+
+    "password": "Password",
+    "password_placeholder": "Geli password-kaaga",
+
+    "show": "Muuji",
+    "hide": "Qari",
+
+    "button": "Gal",
+    "loading": "Waa la galayaa...",
+
+    "new_here": "Cusub ma tahay?",
+    "create_account": "Samee akoon",
+
+    "error_required": "Dhammaan meelaha waa qasab",
+    "error_invalid": "Email ama password khaldan",
+    "success": "Si guul leh ayaad u gashay 🎉"
+  },
+  "contact": {
+    "title": "Waxaan jeclaan lahayn inaan kaa maqalno",
+    "subtitle": "Nala soo xiriir — waxaan kaga jawaabnaa 24 saacadood gudahood.",
+
+    "name": "Magaca Buuxa",
+    "email": "Email",
+    "message": "Fariin",
+
+    "subject1": "Su'aal guud",
+    "subject2": "Su'aal ku saabsan deeqaha waxbarasho",
+    "subject3": "Dhibaato farsamo",
+    "subject4": "Fikrad / Talo",
+
+    "send": "Dir fariin",
+    "sending": "Waa la dirayaa...",
+    "success": "✔ Fariinta waa la diray! Waan kula soo xiriiri doonaa dhowaan.",
+
+    "email_info": "scholarhispguidance.iiui@gmail.com",
+    "location": "IIUI Islamabad",
+    "time": "24 saacadood gudahood",
+
+    "faq1_q": "Ma bilaash baa?",
+    "faq1_a": "Haa, gebi ahaanba waa bilaash.",
+
+    "faq2_q": "Ma dammaanad qaaddaan deeqaha?",
+    "faq2_a": "Maya, waxaan bixinaa hagitaan kaliya.",
+
+    "faq3_q": "Dalalkee?",
+    "faq3_a": "USA iyo Yurub.",
+
+    "map": "IIUI Islamabad, H-10, Pakistan"
+  },
+  "register": {
+    "title": "Samee akoonkaaga",
+    "subtitle": "Bilow inaad hesho deeqaha waxbarasho daqiiqado gudahood.",
+
+    "name": "Magaca buuxa",
+    "name_placeholder": "Geli magacaaga",
+
+    "email": "Email",
+    "email_placeholder": "Geli emailkaaga",
+
+    "password": "Password",
+    "password_placeholder": "Geli password-kaaga",
+
+    "show": "Muuji",
+    "hide": "Qari",
+
+    "button": "Bilow bilaash",
+    "loading": "Akoon ayaa la abuurayaa...",
+
+    "have_account": "Ma leedahay akoon?",
+    "login": "Gal",
+
+    "error_name": "Magaca waa qasab",
+    "error_email": "Email sax ah geli",
+    "error_password": "Password waa inuu ka badan yahay 6 xaraf",
+
+    "success": "Akoon si guul leh ayaa loo sameeyay 🎉",
+    "failed": "Diiwaangelin fashilantay"
+  },
+  "privacy": {
+    "title": "Siyaasadda Asturnaanta",
+    "subtitle": "La cusboonaysiiyay: Juun 2025",
+
+    "nav": {
+      "overview": "Guudmar",
+      "data_collected": "Macluumaad la ururiyey",
+      "data_use": "Isticmaalka xogta",
+      "data_storage": "Kaydinta xogta",
+      "web_scraping": "Web scraping",
+      "cookies": "Cookies",
+      "third_party": "Qolo saddexaad",
+      "rights": "Xuquuqdaada",
+      "changes": "Isbeddel",
+      "contact": "La xiriir"
+    },
+
+    "overview_title": "Guudmar",
+    "overview": "Mashruuc ardayeed oo IIUI ah.",
+
+    "data_collected_title": "Macluumaad la ururiyey",
+    "data_collected": "Magac, email, password",
+
+    "data_use_title": "Isticmaalka xogta",
+    "data_use": "Isku xirka deeqaha",
+
+    "data_storage_title": "Kaydinta xogta",
+    "data_storage": "Kaydin ammaan ah",
+
+    "web_scraping_title": "Web scraping",
+    "web_scraping": "Xog dadweyne oo keliya",
+
+    "cookies_title": "Cookies",
+    "cookies": "Cookies yar",
+
+    "third_party_title": "Qolo saddexaad",
+    "third_party": "Adeegyo dibadeed",
+
+    "rights_title": "Xuquuqdaada",
+    "rights": "Waxaad codsan kartaa tirtirid",
+
+    "changes_title": "Isbeddel",
+    "changes": "Waa la cusboonaysiin karaa",
+
+    "contact_title": "La xiriir",
+    "contact": "scholarpath.iiui@gmail.com"
+  },
+  "scholarships": {
+    "title": "Deeqaha Waxbarasho",
+    "subtitle": "Deeqo waxbarasho oo caalami ah oo loo diyaariyey ardayda Pakistan.",
+    "found": "deeqo la helay",
+    "deadline": "Waqtiga kama dambaysta ah",
+    "view": "Eeg",
+    "load_more": "Wax badan soo bandhig"
+  },
+  "navbar": {
+    "home": "Bogga Hore",
+    "scholarships": "Deeqaha",
+    "how": "Sida ay u shaqeyso",
+    "login": "Gal",
+    "register": "Isdiiwaangeli",
+    "dashboard": "Dashboard"
+  },
+  "stats": {
+    "scholarships": "DEEQO",
+    "students": "ARDEY LA CAAWIYAY",
+    "countries": "DALAL"
+  },
+
+  "sections": {
+    "featured": "FURSADO MUHIIM AH",
+    "title": "Deeqaha ugu fiican",
+    "view_all": "Eeg dhammaan",
+    "view": "Faahfaahin",
+    "cta_title": "Bilow safarkaaga",
+    "cta_desc": "Ku biir kumanaan arday",
+    "cta_btn": "Isdiiwaangeli"
+  },
+  "works": {
+    "label": "SIDEE AY U SHAQEYSO",
+    "title": "Saddex tallaabo mustaqbalkaaga",
+    "subtitle": "Waxaan ku hagaynaa safarkaaga oo dhan.",
+
+    "step1_title": "Geli xogtaada",
+    "step1_desc": "La wadaag macluumaadkaaga waxbarasho.",
+
+    "step2_title": "AI ayaa ku helaya",
+    "step2_desc": "Waxaan kuu helnaa deeqo kugu habboon.",
+
+    "step3_title": "Codso kalsooni",
+    "step3_desc": "Hel hagitaan iyo taageero buuxda."
+  },
+  "hero": {
+    "badge": "AI deeqo raadinta",
+    "title": "Hel deeqdaada",
+    "highlight": "Caalamiga ah",
+    "desc": "Raadi deeqo waxbarasho",
+    "start": "Bilow bilaash",
+    "browse": "Eeg deeqaha",
+    "trust": "10,000+ arday"
+  },
+
+  "footer": {
+    "desc": "Ardayda u sahla inay gaaraan adduunka",
+    "explore": "Soo Baadh",
+    "company": "Shirkad",
+    "scholarships": "Deeqo",
+    "how": "Sida ay u shaqeyso",
+    "start": "Bilow",
+    "about": "Nagu saabsan",
+    "contact": "La xiriir",
+    "privacy": "Asturnaanta",
+    "copy": "© 2026 Xuquuqda oo dhan waa la ilaaliyay"
+  },
+  "admin": {
+    "title": "Deeqaha",
+    "add": "Ku dar deeq",
+    "edit": "Wax ka beddel",
+    "save": "Kaydi",
+    "delete": "Tirtir",
+    "cancel": "Jooji",
+    "loading": "Waa la soo gelinayaa",
+    "name": "Magac",
+    "country": "Dal",
+    "degree": "Degree",
+    "deadline": "Waqtiga",
+    "actions": "Falal",
+    "field": "Field",
+    "delete_title": "Tirtir deeq",
+    "delete_msg": "Ma hubtaa inaad tirtirayso?"
+  }
+}

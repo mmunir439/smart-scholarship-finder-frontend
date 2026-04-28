@@ -1,12 +1,16 @@
-"use client"
-import react from "react"
-import Link from "next/link"
-export default function () {
+"use client";
+
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+
+export default function DashboardNavbar() {
+    const { t } = useTranslation();
+
     return (
-        <>
-            <nav>
-                <Link href={"/"} className="bg-white-100 text-yellow-400">Dashboard</Link>
-            </nav>
-        </>
-    )
+        <nav>
+            <Link href="/" className="text-yellow-400">
+                {t("dashboard.nav")}
+            </Link>
+        </nav>
+    );
 }

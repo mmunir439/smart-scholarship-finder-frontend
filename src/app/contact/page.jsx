@@ -3,8 +3,12 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer"
+import Footer from "@/components/Footer";
+import { useTranslation } from "react-i18next";
+
 export default function ContactPage() {
+  const { t } = useTranslation(); // ✅ ADD
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -29,121 +33,125 @@ export default function ContactPage() {
   return (
     <>
       <Navbar />
-    <div className="px-6 md:px-16 py-16">
-      {/* HERO */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-12"
-      >
-        <h1 className="text-3xl font-bold mb-2">
-          We'd Love to Hear From You
-        </h1>
-        <p className="text-gray-500">
-          Reach out — we respond within 24 hours.
-        </p>
-      </motion.div>
 
-      {/* MAIN */}
-      <div className="grid md:grid-cols-5 gap-10">
+      <div className="px-6 md:px-16 py-16">
 
-        {/* FORM */}
-        <div className="md:col-span-3">
-          {!success ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
+        {/* HERO */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-3xl font-bold mb-2">
+            {t("contact.title")}
+          </h1>
+          <p className="text-gray-500">
+            {t("contact.subtitle")}
+          </p>
+        </motion.div>
 
-              <input
-                placeholder="Full Name"
-                className="w-full border p-3 rounded"
-                onChange={(e) =>
-                  setForm({ ...form, name: e.target.value })
-                }
-              />
+        {/* MAIN */}
+        <div className="grid md:grid-cols-5 gap-10">
 
-              <input
-                type="email"
-                placeholder="Email"
-                className="w-full border p-3 rounded"
-                onChange={(e) =>
-                  setForm({ ...form, email: e.target.value })
-                }
-              />
+          {/* FORM */}
+          <div className="md:col-span-3">
+            {!success ? (
+              <form onSubmit={handleSubmit} className="space-y-4">
 
-              <select
-                className="w-full border p-3 rounded"
-                onChange={(e) =>
-                  setForm({ ...form, subject: e.target.value })
-                }
-              >
-                <option>General Inquiry</option>
-                <option>Scholarship Question</option>
-                <option>Technical Issue</option>
-                <option>Feedback</option>
-              </select>
+                <input
+                  placeholder={t("contact.name")}
+                  className="w-full border p-3 rounded"
+                  onChange={(e) =>
+                    setForm({ ...form, name: e.target.value })
+                  }
+                />
 
-              <textarea
-                rows={5}
-                placeholder="Message"
-                className="w-full border p-3 rounded"
-                onChange={(e) =>
-                  setForm({ ...form, message: e.target.value })
-                }
-              />
+                <input
+                  type="email"
+                  placeholder={t("contact.email")}
+                  className="w-full border p-3 rounded"
+                  onChange={(e) =>
+                    setForm({ ...form, email: e.target.value })
+                  }
+                />
 
-              <button className="w-full bg-[#F5A623] py-3 text-white rounded">
-                {loading ? "Sending..." : "Send Message"}
-              </button>
+                <select
+                  className="w-full border p-3 rounded"
+                  onChange={(e) =>
+                    setForm({ ...form, subject: e.target.value })
+                  }
+                >
+                  <option>{t("contact.subject1")}</option>
+                  <option>{t("contact.subject2")}</option>
+                  <option>{t("contact.subject3")}</option>
+                  <option>{t("contact.subject4")}</option>
+                </select>
 
-            </form>
-          ) : (
-            <div className="text-green-600 text-center text-lg">
-              ✔ Message sent! We'll get back to you soon.
+                <textarea
+                  rows={5}
+                  placeholder={t("contact.message")}
+                  className="w-full border p-3 rounded"
+                  onChange={(e) =>
+                    setForm({ ...form, message: e.target.value })
+                  }
+                />
+
+                <button className="w-full bg-[#F5A623] py-3 text-white rounded">
+                  {loading ? t("contact.sending") : t("contact.send")}
+                </button>
+
+              </form>
+            ) : (
+              <div className="text-green-600 text-center text-lg">
+                {t("contact.success")}
+              </div>
+            )}
+          </div>
+
+          {/* INFO */}
+          <div className="md:col-span-2 space-y-4">
+
+            <div className="bg-[#0B1437] text-white p-5 rounded">
+              📧 {t("contact.email_info")}
             </div>
-          )}
+
+            <div className="bg-[#0B1437] text-white p-5 rounded">
+              🏛️ {t("contact.location")}
+            </div>
+
+            <div className="bg-[#0B1437] text-white p-5 rounded">
+              ⏰ {t("contact.time")}
+            </div>
+
+            {/* FAQ */}
+            <div className="mt-6 space-y-3">
+              <details className="border p-3 rounded">
+                <summary>{t("contact.faq1_q")}</summary>
+                {t("contact.faq1_a")}
+              </details>
+
+              <details className="border p-3 rounded">
+                <summary>{t("contact.faq2_q")}</summary>
+                {t("contact.faq2_a")}
+              </details>
+
+              <details className="border p-3 rounded">
+                <summary>{t("contact.faq3_q")}</summary>
+                {t("contact.faq3_a")}
+              </details>
+            </div>
+
+          </div>
         </div>
 
-        {/* INFO */}
-        <div className="md:col-span-2 space-y-4">
-
-          <div className="bg-[#0B1437] text-white p-5 rounded">
-            📧 scholarhispguidance.iiui@gmail.com
-          </div>
-
-          <div className="bg-[#0B1437] text-white p-5 rounded">
-            🏛️ IIUI Islamabad
-          </div>
-
-          <div className="bg-[#0B1437] text-white p-5 rounded">
-            ⏰ Within 24 hours
-          </div>
-
-          {/* FAQ */}
-          <div className="mt-6 space-y-3">
-            <details className="border p-3 rounded">
-              <summary>Is this platform free?</summary>
-              Yes, completely free.
-            </details>
-
-            <details className="border p-3 rounded">
-              <summary>Do you guarantee scholarships?</summary>
-              No, guidance only.
-            </details>
-
-            <details className="border p-3 rounded">
-              <summary>Which countries?</summary>
-              USA & Europe.
-            </details>
-          </div>
-
+        {/* MAP */}
+        <div className="mt-16 bg-[#0B1437] text-white p-10 text-center rounded">
+          📍 {t("contact.map")}
         </div>
+
       </div>
 
-      {/* MAP */}
-      <div className="mt-16 bg-[#0B1437] text-white p-10 text-center rounded">
-        📍 IIUI Islamabad, H-10, Pakistan
-      </div>
-    </div>
       <Footer />
-      </>
+    </>
   );
 }
