@@ -181,12 +181,14 @@
 
   "sections": {
     "featured": "FURSADO MUHIIM AH",
-    "title": "Deeqaha ugu fiican",
+    "title": "Deeqaha ugu fiican xilligan",
     "view_all": "Eeg dhammaan",
     "view": "Faahfaahin",
-    "cta_title": "Bilow safarkaaga",
+    "deadline": "Waqtiga kama dambaysta ah",
+
+    "cta_title": "Bilow safarkaaga maanta",
     "cta_desc": "Ku biir kumanaan arday",
-    "cta_btn": "Isdiiwaangeli"
+    "cta_btn": "Bilow bilaash"
   },
   "works": {
     "label": "SIDEE AY U SHAQEYSO",
@@ -206,10 +208,19 @@
     "badge": "AI deeqo raadinta",
     "title": "Hel deeqdaada",
     "highlight": "Caalamiga ah",
-    "desc": "Raadi deeqo waxbarasho",
+    "desc": "Raadi oo codso deeqaha waxbarasho.",
     "start": "Bilow bilaash",
     "browse": "Eeg deeqaha",
-    "trust": "10,000+ arday"
+    "trust": "10,000+ arday",
+
+    "card_title": "Barnaamijka Fulbright",
+    "card_country": "USA",
+    "card_degree": "Master",
+    "card_match": "U-qalmid",
+    "card_funding": "Maalgelin",
+    "card_funding_value": "Buuxa",
+    "card_deadline": "Waqti",
+    "card_deadline_value": "15 May"
   },
 
   "footer": {

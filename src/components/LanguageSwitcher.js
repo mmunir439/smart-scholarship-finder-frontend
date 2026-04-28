@@ -4,10 +4,14 @@ import i18n from "i18next";
 
 export default function LanguageSwitcher() {
   return (
-    <div style={{ display: "flex", gap: "10px" }}>
-      <button onClick={() => i18n.changeLanguage("en")}>EN</button>
-      <button onClick={() => i18n.changeLanguage("ur")}>UR</button>
-      <button onClick={() => i18n.changeLanguage("so")}>SO</button>
-    </div>
+    <select
+      onChange={(e) => i18n.changeLanguage(e.target.value)}
+      defaultValue={i18n.language}
+      className="border rounded px-2 py-1 text-sm cursor-pointer"
+    >
+      <option value="en">EN</option>
+      <option value="ur">UR</option>
+      <option value="so">SO</option>
+    </select>
   );
 }

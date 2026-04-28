@@ -185,9 +185,11 @@
     "title": "Top scholarships this season",
     "view_all": "View all scholarships",
     "view": "View details",
+    "deadline": "Deadline",
+
     "cta_title": "Start your scholarship journey today",
-    "cta_desc": "Join thousands of students.",
-    "cta_btn": "Register Now"
+    "cta_desc": "Join thousands of students discovering opportunities worldwide.",
+    "cta_btn": "Get Started Free"
   },
   "works": {
     "label": "HOW IT WORKS",
@@ -207,10 +209,19 @@
     "badge": "AI-powered scholarship matching",
     "title": "Find Your Perfect",
     "highlight": "International Scholarship",
-    "desc": "Discover and apply to scholarships.",
+    "desc": "ScholarPath helps Pakistani students discover, qualify, and apply to fully-funded scholarships.",
     "start": "Get Started Free",
     "browse": "Browse Scholarships",
-    "trust": "Trusted by 10,000+ students"
+    "trust": "Trusted by 10,000+ students",
+
+    "card_title": "Fulbright Program",
+    "card_country": "United States",
+    "card_degree": "Master's",
+    "card_match": "Eligibility match",
+    "card_funding": "Funding",
+    "card_funding_value": "Full",
+    "card_deadline": "Deadline",
+    "card_deadline_value": "May 15"
   },
 
   "footer": {
@@ -242,20 +253,20 @@
     "delete": "Delete Profile"
   },
   "admin": {
-  "title": "Scholarships",
-  "add": "Add Scholarship",
-  "edit": "Edit Scholarship",
-  "save": "Save Changes",
-  "delete": "Delete",
-  "cancel": "Cancel",
-  "loading": "Loading...",
-  "name": "Name",
-  "country": "Country",
-  "degree": "Degree",
-  "deadline": "Deadline",
-  "actions": "Actions",
-  "field": "Field",
-  "delete_title": "Delete Scholarship",
-  "delete_msg": "Are you sure you want to delete?"
-}
+    "title": "Scholarships",
+    "add": "Add Scholarship",
+    "edit": "Edit Scholarship",
+    "save": "Save Changes",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "loading": "Loading...",
+    "name": "Name",
+    "country": "Country",
+    "degree": "Degree",
+    "deadline": "Deadline",
+    "actions": "Actions",
+    "field": "Field",
+    "delete_title": "Delete Scholarship",
+    "delete_msg": "Are you sure you want to delete?"
+  }
 }

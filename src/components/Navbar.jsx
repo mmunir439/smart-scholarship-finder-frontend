@@ -4,9 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Navbar() {
-  const { t } = useTranslation(); // ✅ ADD
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
 
   return (
@@ -23,10 +24,18 @@ export default function Navbar() {
 
         {/* Desktop Links */}
         <ul className="hidden md:flex items-center gap-6 text-sm text-gray-700">
+
           <li><Link href="/">{t("navbar.home")}</Link></li>
           <li><Link href="/scholarships">{t("navbar.scholarships")}</Link></li>
           <li><Link href="/how-it-works">{t("navbar.how")}</Link></li>
           <li><Link href="/login">{t("navbar.login")}</Link></li>
+
+          {/* 🌐 Language Switcher */}
+          <li>
+            <LanguageSwitcher />
+          </li>
+
+          {/* Register */}
           <li>
             <Link
               href="/register"
@@ -51,18 +60,25 @@ export default function Navbar() {
 
         {/* Top */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
+
           <div className="text-lg font-bold flex items-center gap-1">
             🎓 <span className="text-gray-800">Smart</span>
             <span className="text-orange-500">Scholarship</span>
           </div>
 
-          <button onClick={() => setOpen(false)}>
-            <X size={24} />
-          </button>
+          <div className="flex items-center gap-3">
+            {/* 🌐 Mobile Language */}
+            <LanguageSwitcher />
+
+            <button onClick={() => setOpen(false)}>
+              <X size={24} />
+            </button>
+          </div>
         </div>
 
         {/* Links */}
         <div className="flex flex-col gap-5 px-6 py-6 text-gray-700 text-sm">
+
           <Link href="/" onClick={() => setOpen(false)}>
             {t("navbar.home")}
           </Link>

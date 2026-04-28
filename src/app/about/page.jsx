@@ -18,7 +18,7 @@ export default function AboutPage() {
     const team = [
         {
             name: "Muhammad Munir",
-            image: "/munir.jpeg",
+            image: "/munir.png",
         },
         {
             name: "Diini Isaq Farah",
