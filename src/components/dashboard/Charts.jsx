@@ -1,6 +1,6 @@
 "use client";
 import { useTranslation } from "react-i18next";
-const { t } = useTranslation();
+
 import {
     BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
     PieChart, Pie, Cell
@@ -29,7 +29,7 @@ const COLORS = ["#10B981", "#F5A623", "#9CA3AF"];
 
 // 📊 Country Chart
 export function CountryChart({ data }) {
-
+    const { t } = useTranslation();
     const countryMap = {};
 
     data.forEach(item => {

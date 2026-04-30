@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "../utils/axios";
@@ -9,21 +8,21 @@ import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { useTranslation } from "react-i18next";
-
+import { useSearchParams } from "next/navigation";
 export default function Login() {
   const { t } = useTranslation(); // ✅ ADD THIS
-  const router = useRouter();
-
+  const [loginError, setLoginError] = useState("");
+  const router = useRouter()
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
+    setLoginError(""); // ✅ reset error
   };
 
   const handleSubmit = async (e) => {
@@ -43,7 +42,7 @@ export default function Login() {
 
       const role = res.data.user.role;
 
-      toast.success(t("login.success"));
+      toast.success("Login successful"); // ✅ will show
 
       setTimeout(() => {
         if (role === "admin") {
@@ -51,10 +50,13 @@ export default function Login() {
         } else {
           router.push("/dashboard");
         }
-      }, 1200);
+      }, 1000);
 
     } catch (err) {
-      toast.error(t("login.error_invalid"));
+      const message = err.response?.data?.message || "Invalid email or password";
+
+      setLoginError(message);
+      toast.error(message);
     } finally {
       setLoading(false);
     }
@@ -74,10 +76,13 @@ export default function Login() {
           <p className="text-gray-500 mb-6">
             {t("login.subtitle")}
           </p>
-
           <form onSubmit={handleSubmit} className="space-y-4">
-
+            {loginError && (
+              <p className="text-red-600 text-sm mb-4 text-center">
+                {loginError}
+              </p>)}
             <div>
+
               <label className="text-sm">{t("login.email")}</label>
               <input
                 name="email"
@@ -110,8 +115,8 @@ export default function Login() {
             <button
               disabled={loading}
               className={`w-full py-3 rounded-lg font-semibold text-white transition ${loading
-                  ? "bg-gray-400"
-                  : "bg-orange-500 hover:bg-orange-600"
+                ? "bg-gray-400"
+                : "bg-orange-500 hover:bg-orange-600"
                 }`}
             >
               {loading ? t("login.loading") : t("login.button")}

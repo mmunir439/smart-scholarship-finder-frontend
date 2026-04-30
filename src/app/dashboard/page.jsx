@@ -1,5 +1,7 @@
 "use client";
+import react from "react"
 import React, { useState, useEffect } from "react";
+import { useContext } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import StatsCard from "@/components/dashboard/StatsCard";
 import {
@@ -75,7 +77,7 @@ export default function Page() {
             {/* Greeting */}
             <div className="mb-6">
                 <h1 className="text-2xl font-bold">
-                   Welcome back, {user?.name || "User"} 👋
+                    Welcome back, {user?.name || "User"} 👋
                 </h1>
                 <p className="text-gray-500">{today}</p>
             </div>

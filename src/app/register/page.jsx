@@ -5,36 +5,55 @@ import axios from "../utils/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
-import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import { useTranslation } from "react-i18next";
 
 export default function Register() {
-  const { t } = useTranslation(); // ✅ ADD
+  const { t } = useTranslation();
   const router = useRouter();
-
+  const [successfulMessage, setSuccessfulMessage] = useState();
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    confirmPassword: "",
   });
 
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+
+
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+
+    setErrors((prev) => ({
+      ...prev,
+      [name]: "",
+    }));
+
+
   };
 
   const validate = () => {
-    if (!form.name) return t("register.error_name");
-    if (!form.email.includes("@")) return t("register.error_email");
-    if (form.password.length < 6) return t("register.error_password");
+    if (!form.name) return "Name is required";
+    if (!form.email.includes("@")) return "Valid email required";
+    if (form.password.length < 6) return "Password must be at least 6 characters";
+    if (form.password !== form.confirmPassword) return "Passwords do not match";
     return null;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
 
     const error = validate();
     if (error) return toast.error(error);
@@ -42,105 +61,149 @@ export default function Register() {
     try {
       setLoading(true);
 
-      await axios.post("/user/register", form);
-
-      toast.success(t("register.success"));
-
-      setTimeout(() => {
-        router.push("/login");
-      }, 1500);
+      const res = await axios.post("/user/register", form);
+      setSuccessfulMessage(res.data.message);
+      console.log(res.data)
+      toast.success(res.data.message);
+      setTimeout(() => router.push("/login?success=registered"), 1500);
 
     } catch (err) {
-      toast.error(t("register.failed"));
+      const { field, message } = err.response?.data || {};
+
+      if (field) {
+        setErrors((prev) => ({
+          ...prev,
+          [field]: message,
+        }));
+      } else {
+        toast.error(message || t("register.failed"));
+      }
     } finally {
       setLoading(false);
     }
+
+
   };
 
+  const isMatch = form.password === form.confirmPassword;
+
   return (
-    <>
-      <Navbar />
+    <> <Navbar />
 
-      <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
 
-        <div className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg">
+      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+        <div className="w-full max-w-2xl bg-white p-6 sm:p-10 rounded-2xl shadow-lg">
 
-          <h2 className="text-3xl font-bold text-[#0b1d3a] mb-2">
-            {t("register.title")}
-          </h2>
-
-          <p className="text-gray-500 mb-6">
-            {t("register.subtitle")}
-          </p>
+          {/* Title & subtitle stay the same */}
 
           <form onSubmit={handleSubmit} className="space-y-4">
+            {successfulMessage && (
+              <p className="text-green-600 text-sm">{successfulMessage}</p>
+            )}
 
-            {/* Name */}
-            <div>
-              <label className="text-sm">{t("register.name")}</label>
-              <input
-                name="name"
-                placeholder={t("register.name_placeholder")}
-                value={form.name}
-                onChange={handleChange}
-                className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
-              />
-            </div>
+            {/* 2-column grid for inputs */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-            {/* Email */}
-            <div>
-              <label className="text-sm">{t("register.email")}</label>
-              <input
-                name="email"
-                placeholder={t("register.email_placeholder")}
-                value={form.email}
-                onChange={handleChange}
-                className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
-              />
-            </div>
+              {/* Name */}
+              <div>
+                <label className="text-sm">
+                  {t("register.name")} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder={t("register.name_placeholder")}
+                  className="w-full mt-1 p-3 border rounded-lg bg-gray-50"
+                />
+                {errors.name && <p className="text-red-500 text-xs mt-1">{errors.name}</p>}
+              </div>
 
-            {/* Password */}
-            <div className="relative">
-              <label className="text-sm">{t("register.password")}</label>
-              <input
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder={t("register.password_placeholder")}
-                value={form.password}
-                onChange={handleChange}
-                className="w-full mt-1 p-3 border rounded-lg bg-gray-50 focus:ring-2 focus:ring-orange-400"
-              />
+              {/* Email */}
+              <div>
+                <label className="text-sm">
+                  {t("register.email")} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder={t("register.email_placeholder")}
+                  className="w-full mt-1 p-3 border rounded-lg bg-gray-50"
+                />
+                {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
+              </div>
 
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-9 cursor-pointer text-sm text-gray-500"
-              >
-                {showPassword ? t("register.hide") : t("register.show")}
-              </span>
-            </div>
+              {/* Password */}
+              <div className="relative">
+                <label className="text-sm">
+                  {t("register.password")} <span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="password"
+                  type={showPassword ? "text" : "password"}
+                  value={form.password}
+                  onChange={handleChange}
+                  placeholder={t("register.password_placeholder")}
+                  className="w-full mt-1 p-3 border rounded-lg bg-gray-50 pr-14"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-8 text-sm text-gray-500"
+                >
+                  {showPassword ? "Hide" : "Show"}
+                </button>
+                {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
+              </div>
 
-            {/* Button */}
+              {/* Confirm Password */}
+              <div className="relative">
+                <label className="text-sm">
+                  Confirm Password <span className="text-red-500">*</span>
+                </label>
+                <input
+                  name="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={form.confirmPassword}
+                  onChange={handleChange}
+                  placeholder="Confirm your password"
+                  className="w-full mt-1 p-3 border rounded-lg bg-gray-50 pr-14"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-8 text-sm text-gray-500"
+                >
+                  {showConfirmPassword ? "Hide" : "Show"}
+                </button>
+                {form.confirmPassword && (
+                  <p className={`text-xs mt-1 ${isMatch ? "text-green-500" : "text-red-500"}`}>
+                    {isMatch ? "Passwords match" : "Passwords do not match"}
+                  </p>
+                )}
+              </div>
+
+            </div>{/* end grid */}
+
+            {/* Submit — full width, outside grid */}
             <button
-              disabled={loading}
-              className={`w-full py-3 rounded-lg font-semibold text-white transition ${loading
-                  ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-orange-500 hover:bg-orange-600"
+              disabled={loading || !isMatch}
+              className={`w-full py-3 rounded-lg font-semibold text-white mt-2 ${loading || !isMatch
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-orange-500 hover:bg-orange-600"
                 }`}
             >
-              {loading ? t("register.loading") : t("register.button")}
+              {loading ? "Loading..." : t("register.button")}
             </button>
-          </form>
 
-          <p className="text-sm text-center text-gray-500 mt-6">
-            {t("register.have_account")}{" "}
-            <Link href="/login" className="font-medium text-[#0b1d3a]">
-              {t("register.login")}
-            </Link>
-          </p>
+          </form>
         </div>
       </div>
-
       <Footer />
     </>
+
+
   );
 }
