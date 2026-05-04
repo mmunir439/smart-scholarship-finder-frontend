@@ -1,176 +1,191 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Trash2, X, Eye } from "lucide-react";
+import React, { useEffect, useMemo, useState } from "react";
 import axios from "@/app/utils/axios";
+import {
+    FiTrash2,
+    FiSearch,
+    FiUsers,
+    FiAlertTriangle,
+    FiX,
+    FiRefreshCw,
+} from "react-icons/fi";
 
-export default function AdminUsersPage() {
-    const [deleteUserId, setDeleteUserId] = useState(null);
+export default function User() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [deleting, setDeleting] = useState(false);
+    const [error, setError] = useState("");
+    const [search, setSearch] = useState("");
+    const [deleteId, setDeleteId] = useState(null);
 
-    const [selectedUser, setSelectedUser] = useState(null); // for modal
-
-    // ================= FETCH USERS =================
-    const fetchUsers = async () => {
+    const getAllUsers = async () => {
         try {
-            const res = await axios.get("/admin/users");
-            setUsers(res.data);
-        } catch (err) {
-            console.error(err);
+            setLoading(true);
+            setError("");
+            const res = await axios.get("/user/all");
+            setUsers(res?.data?.data ?? []);
+        } catch (error) {
+            console.log(error);
+            setError(error?.response?.data?.message || "Failed to load users");
+            setUsers([]);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchUsers();
+        getAllUsers();
     }, []);
 
-    // ================= DELETE =================
-    const handleDelete = async () => {
-  try {
-    await axios.delete(`/admin/users/${deleteUserId}`);
-    setDeleteUserId(null);
-    fetchUsers();
-  } catch (err) {
-    console.error(err);
-  }
-};
+    const filteredUsers = useMemo(() => {
+        const q = search.trim().toLowerCase();
+        if (!q) return users;
 
-    // ================= VIEW =================
-    const handleView = (user) => {
-        setSelectedUser(user);
+        return users.filter((u) =>
+            [u.name, u.email, u.role]
+                .filter(Boolean)
+                .some((v) => String(v).toLowerCase().includes(q))
+        );
+    }, [users, search]);
+
+    const handleDelete = async () => {
+        if (!deleteId) return;
+
+        try {
+            setDeleting(true);
+            await axios.delete(`/user/delete/${deleteId}`);
+            setDeleteId(null);
+            await getAllUsers();
+        } catch (err) {
+            console.log(err);
+            setError(err?.response?.data?.message || "Failed to delete user");
+        } finally {
+            setDeleting(false);
+        }
     };
 
-    // ================= UI =================
     return (
-        <div className="p-6">
+        <div className="p-6 space-y-5">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+                        <FiUsers /> Users Management
+                    </h1>
+                    <p className="text-sm text-gray-500">
+                        View and remove users from the system.
+                    </p>
+                </div>
 
-            {/* HEADER */}
-            <div className="flex justify-between items-center mb-6">
-                <h1 className="text-2xl font-bold">Users Management</h1>
+                <button
+                    onClick={getAllUsers}
+                    className="inline-flex items-center gap-2 px-4 py-2 rounded-lg border hover:bg-gray-50 transition"
+                >
+                    <FiRefreshCw size={16} />
+                    Refresh
+                </button>
             </div>
 
-            {/* TABLE */}
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <table className="w-full text-sm border bg-white rounded-lg overflow-hidden">
-                    <thead className="bg-gray-100">
-                        <tr>
-                            <th className="p-3 text-left">Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                            <th>Country</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+            <div className="bg-white border rounded-xl p-4">
+                <div className="relative max-w-md">
+                    <FiSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                    <input
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        placeholder="Search by name, email, or role"
+                        className="w-full border rounded-lg pl-10 pr-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-200"
+                    />
+                </div>
+            </div>
 
-                    <tbody>
-                        {users.map((user) => (
-                            <tr key={user._id} className="border-t hover:bg-gray-50">
-                                <td className="p-3">{user.name}</td>
-                                <td>{user.email}</td>
-                                <td>{user.role || "User"}</td>
-                                <td>{user.profile?.country || "N/A"}</td>
-
-                                <td className="flex gap-3 p-3">
-                                    {/* VIEW */}
-                                    <button
-                                        onClick={() => handleView(user)}
-                                        className="text-blue-500"
-                                    >
-                                        <Eye size={16} />
-                                    </button>
-
-                                    {/* DELETE */}
-                                    <button
-                                        onClick={() => setDeleteUserId(user._id)}
-                                        className="flex items-center gap-1 px-2 py-1 text-red-600 hover:bg-red-50 rounded-md transition"
-                                    >
-                                        <Trash2 size={14} />
-                                        <span className="text-xs font-medium">Delete</span>
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
+            {error && (
+                <div className="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4 text-sm flex items-center gap-2">
+                    <FiAlertTriangle /> {error}
+                </div>
             )}
-{deleteUserId && (
-  <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-    <div className="bg-white rounded-xl p-6 w-[400px] shadow-lg">
 
-      <h2 className="text-lg font-semibold mb-3 text-center">
-        Delete User
-      </h2>
+            <div className="bg-white border rounded-xl overflow-hidden">
+                {loading ? (
+                    <div className="p-6 text-sm text-gray-500">Loading users...</div>
+                ) : filteredUsers.length === 0 ? (
+                    <div className="p-8 text-center text-gray-500 text-sm">
+                        No users found.
+                    </div>
+                ) : (
+                    <div className="overflow-x-auto">
+                        <table className="min-w-full text-sm">
+                            <thead className="bg-gray-50 text-gray-700">
+                                <tr>
+                                    <th className="text-left p-3">Name</th>
+                                    <th className="text-left p-3">Email</th>
+                                    <th className="text-left p-3">Role</th>
+                                    <th className="text-left p-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {filteredUsers.map((user) => (
+                                    <tr key={user._id} className="border-t hover:bg-gray-50">
+                                        <td className="p-3 font-medium text-gray-900">
+                                            {user.name || "-"}
+                                        </td>
+                                        <td className="p-3 text-gray-600">{user.email || "-"}</td>
+                                        <td className="p-3">
+                                            <span className="inline-flex px-2 py-1 rounded-full bg-blue-50 text-blue-700 text-xs font-medium">
+                                                {user.role || "student"}
+                                            </span>
+                                        </td>
+                                        <td className="p-3">
+                                            <button
+                                                onClick={() => setDeleteId(user._id)}
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-red-200 text-red-600 hover:bg-red-50 transition"
+                                            >
+                                                <FiTrash2 size={14} />
+                                                Delete
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+            </div>
 
-      <p className="text-sm text-gray-600 text-center mb-6">
-        Are you sure you want to delete this user? This action cannot be undone.
-      </p>
-
-      <div className="flex justify-center gap-4">
-
-        {/* CANCEL */}
-        <button
-          onClick={() => setDeleteUserId(null)}
-          className="px-4 py-2 border rounded-lg"
-        >
-          Cancel
-        </button>
-
-        {/* CONFIRM */}
-        <button
-          onClick={handleDelete}
-          className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
-        >
-          Delete
-        </button>
-
-      </div>
-    </div>
-  </div>
-)} 
-            {/* VIEW USER MODAL */}
-            {selectedUser && (
-                <div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
-                    <div className="bg-white rounded-xl p-6 w-[500px] shadow-lg relative">
-
-                        {/* CLOSE */}
-                        <button
-                            onClick={() => setSelectedUser(null)}
-                            className="absolute top-3 right-3 text-gray-500"
-                        >
-                            <X size={18} />
-                        </button>
-
-                        <h2 className="text-lg font-semibold mb-4">
-                            User Details
-                        </h2>
-
-                        <div className="space-y-2 text-sm">
-                            <p><strong>Name:</strong> {selectedUser.name}</p>
-                            <p><strong>Email:</strong> {selectedUser.email}</p>
-                            <p><strong>Role:</strong> {selectedUser.role}</p>
-
-                            <hr className="my-3" />
-
-                            <p><strong>Country:</strong> {selectedUser.profile?.country || "N/A"}</p>
-                            <p><strong>Field:</strong> {selectedUser.profile?.fieldOfStudy || "N/A"}</p>
-                            <p><strong>CGPA:</strong> {selectedUser.profile?.cgpa || "N/A"}</p>
-                            <p><strong>IELTS:</strong> {selectedUser.profile?.ielts || "N/A"}</p>
-                        </div>
-
-                        <div className="mt-4 flex justify-end">
+            {deleteId && (
+                <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4">
+                    <div className="bg-white rounded-xl w-full max-w-md p-5">
+                        <div className="flex items-center justify-between mb-3">
+                            <h2 className="text-lg font-semibold text-gray-900">
+                                Delete User
+                            </h2>
                             <button
-                                onClick={() => setSelectedUser(null)}
-                                className="px-4 py-2 border rounded-lg"
+                                onClick={() => setDeleteId(null)}
+                                className="p-2 rounded-md hover:bg-gray-100"
                             >
-                                Close
+                                <FiX />
                             </button>
                         </div>
 
+                        <p className="text-sm text-gray-600">
+                            Are you sure you want to delete this user? This action cannot be
+                            undone.
+                        </p>
+
+                        <div className="flex justify-end gap-2 mt-5">
+                            <button
+                                onClick={() => setDeleteId(null)}
+                                className="px-4 py-2 rounded-lg border hover:bg-gray-50"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={handleDelete}
+                                disabled={deleting}
+                                className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 disabled:opacity-60"
+                            >
+                                {deleting ? "Deleting..." : "Delete"}
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}

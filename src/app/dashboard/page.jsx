@@ -8,7 +8,7 @@ import axios from "@/app/utils/axios";
 export default function Page() {
     const { t } = useTranslation();
     const [user, setUser] = useState({});
-    const [profile, setProfile] = useState({});
+    const [profile, setProfile] = useState(null);
     const [eligibleData, setEligibleData] = useState([]);
     const today = new Date().toLocaleDateString("en-US", {
         weekday: "long",
@@ -29,10 +29,9 @@ export default function Page() {
     const getProfile = async () => {
         try {
             const res = await axios.get("/academic/profile");
-            setProfile(res.data.data)
-            console.log(res.data.data)
+            setProfile(res.data.data);
         } catch (error) {
-            console.log(error);
+            setProfile(null);
         }
     };
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,8 +73,17 @@ export default function Page() {
                 <p className="text-gray-500">{today}</p>
 
             </div>
-            <AcademicProfileCard />
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <AcademicProfileCard
+                onProfileDeleted={() => {
+                    setProfile(null);
+                    setEligibleData([]);
+                }}
+                onProfileSaved={async () => {
+                    await getProfile();
+                    await getEligible();      // ✅ refetch immediately after save
+                    setCurrentPage(1);        // optional: reset pagination
+                }}
+            />           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {eligibleData.map((item, index) => (
                     <div
                         key={index}

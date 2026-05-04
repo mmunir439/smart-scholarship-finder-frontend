@@ -9,7 +9,7 @@ export default function AdminNavbar() {
     const [user, setUser] = useState({});
     const getUser = async () => {
         try {
-            const res = await axios.get("/user/getUser");
+            const res = await axios.get("/user/getCurrentUser");
             setUser(res.data)
             console.log("full response:", res.data);
 

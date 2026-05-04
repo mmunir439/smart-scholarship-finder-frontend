@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "@/app/utils/axios";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-
+import Link from "next/link"
 import {
     Chart as ChartJS,
     ArcElement,
@@ -56,14 +56,41 @@ export default function ChartsPage() {
     const [eligibleData, setEligibleData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [profileMissing, setProfileMissing] = useState(false);
+    const smallChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: { position: "bottom", labels: { boxWidth: 12, padding: 8 } },
+            tooltip: { enabled: true },
+        },
+    };
 
+    const smallBarOptions = {
+        ...smallChartOptions,
+        scales: {
+            x: { ticks: { maxRotation: 0 } },
+            y: { beginAtZero: true },
+        },
+    };
     const getEligible = async () => {
         try {
             setLoading(true);
+            setError(null);
+            setProfileMissing(false);
+
             const res = await axios.get("/eligible");
             setEligibleData(res.data || []);
         } catch (err) {
-            setError("Failed to load data");
+            const status = err?.response?.status;
+            const message = err?.response?.data?.message || "";
+
+            if (status === 404 || message.toLowerCase().includes("profile")) {
+                setProfileMissing(true);
+                setEligibleData([]);
+            } else {
+                setError("Failed to load data");
+            }
         } finally {
             setLoading(false);
         }
@@ -72,52 +99,65 @@ export default function ChartsPage() {
     useEffect(() => {
         getEligible();
     }, []);
+    // ---------- add these derived datasets ----------
+    const statusCounts = React.useMemo(() => {
+        const counts = { Eligible: 0, Maybe: 0, "Not Eligible": 0 };
+        eligibleData.forEach((it) => {
+            const raw = (it.status || it.eligibility || (typeof it.eligible === "boolean" ? (it.eligible ? "eligible" : "not eligible") : "")).toString?.() || "";
+            const key = raw.toLowerCase();
+            if (key.includes("eligible") && !key.includes("not")) counts.Eligible++;
+            else if (key.includes("maybe") || key.includes("pending")) counts.Maybe++;
+            else counts["Not Eligible"]++;
+        });
+        return counts;
+    }, [eligibleData]);
 
-    // COUNTS
-    const eligibleCount = eligibleData.filter(i => i.status === "Eligible").length;
-    const partialCount = eligibleData.filter(i => i.status === "Partially Eligible").length;
-    const notEligibleCount = eligibleData.filter(i => i.status === "Not Eligible").length;
-
-    const statusData = {
-        labels: ["Eligible", "Partial", "Not Eligible"],
+    const statusData = React.useMemo(() => ({
+        labels: ["Eligible", "Maybe", "Not Eligible"],
         datasets: [{
-            data: [eligibleCount, partialCount, notEligibleCount],
+            data: [statusCounts.Eligible, statusCounts.Maybe, statusCounts["Not Eligible"]],
             backgroundColor: STATUS_COLORS,
             borderColor: STATUS_BORDERS,
-        }]
-    };
+            borderWidth: 1,
+        }],
+    }), [statusCounts]);
 
-    const countryMap = {};
-    eligibleData.forEach(i => {
-        countryMap[i.country] = (countryMap[i.country] || 0) + 1;
-    });
+    const countryData = React.useMemo(() => {
+        const map = {};
+        eligibleData.forEach((it) => {
+            const c = (it.country || "Unknown").toString();
+            map[c] = (map[c] || 0) + 1;
+        });
+        const labels = Object.keys(map);
+        return {
+            labels,
+            datasets: [{
+                label: "Countries",
+                data: labels.map(l => map[l]),
+                backgroundColor: labels.map((_, i) => COUNTRY_COLORS[i % COUNTRY_COLORS.length]),
+            }],
+        };
+    }, [eligibleData]);
 
-    const countryData = {
-        labels: Object.keys(countryMap),
-        datasets: [{
-            data: Object.values(countryMap),
-            backgroundColor: COUNTRY_COLORS,
-        }]
-    };
-
-    const degreeMap = {};
-    eligibleData.forEach(i => {
-        degreeMap[i.degreeLevel] = (degreeMap[i.degreeLevel] || 0) + 1;
-    });
-
-    const degreeData = {
-        labels: Object.keys(degreeMap),
-        datasets: [{
-            data: Object.values(degreeMap),
-            backgroundColor: DEGREE_COLORS,
-            borderColor: DEGREE_BORDERS,
-        }]
-    };
-
+    const degreeData = React.useMemo(() => {
+        const map = {};
+        eligibleData.forEach((it) => {
+            const d = (it.degreeLevel || it.degree || "Other").toString();
+            map[d] = (map[d] || 0) + 1;
+        });
+        const labels = Object.keys(map);
+        return {
+            labels,
+            datasets: [{
+                data: labels.map(l => map[l]),
+                backgroundColor: DEGREE_COLORS,
+                borderColor: DEGREE_BORDERS,
+            }],
+        };
+    }, [eligibleData]);
+    // ---------- end derived datasets ----------
     return (
         <DashboardLayout>
-
-            {/* LOADING */}
             {loading && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <SkeletonCard />
@@ -126,39 +166,54 @@ export default function ChartsPage() {
                 </div>
             )}
 
-            {/* ERROR */}
+            {profileMissing && !loading && (
+                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-xl p-5 text-center">
+                    <h2 className="font-semibold text-lg">Academic profile is missing</h2>
+                    <p className="text-sm mt-1">
+                        Please complete your academic profile to view eligibility charts.
+                        <Link
+                            href="/dashboard"
+                            className="inline-flex items-center justify-center mt-3 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                        >
+                            Enter Profile
+                        </Link>
+                    </p>
+                </div>
+            )}
+
             {error && (
                 <div className="text-center text-red-500">
                     {error}
                 </div>
             )}
 
-            {/* EMPTY */}
-            {!loading && !error && eligibleData.length === 0 && (
+            {!loading && !error && !profileMissing && eligibleData.length === 0 && (
                 <div className="text-center text-gray-400">
                     No data found
                 </div>
             )}
 
-            {/* MAIN CONTENT */}
-            {!loading && !error && eligibleData.length > 0 && (
+            {!loading && !error && !profileMissing && eligibleData.length > 0 && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-
                     <ChartCard title="Eligibility" subtitle="Overview">
-                        <Pie data={statusData} />
+                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                            <Pie data={statusData} options={smallChartOptions} />
+                        </div>
                     </ChartCard>
 
                     <ChartCard title="Countries" subtitle="Distribution">
-                        <Bar data={countryData} />
+                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                            <Bar data={countryData} options={smallBarOptions} />
+                        </div>
                     </ChartCard>
 
                     <ChartCard title="Degree Level" subtitle="Breakdown" wide>
-                        <Doughnut data={degreeData} />
+                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                            <Doughnut data={degreeData} options={smallChartOptions} />
+                        </div>
                     </ChartCard>
-
                 </div>
             )}
-
         </DashboardLayout>
     );
 }

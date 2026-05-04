@@ -6,7 +6,7 @@ import { Pencil, Trash2, Save, X } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import Input from "@/components/Input"
 import Select from "@/components/Select"
-export default function AcademicProfileCard() {
+export default function AcademicProfileCard({ onProfileDeleted, onProfileSaved }) {
     const { t } = useTranslation();
     const [showForm, setShowForm] = useState(false);
 
@@ -44,28 +44,35 @@ export default function AcademicProfileCard() {
         setForm({ ...form, [e.target.name]: e.target.value });
     };
 
+    // ...existing code...
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
 
         try {
+            let res;
             if (exists) {
-                await axios.put("/academic/profile", form);
+                res = await axios.put("/academic/profile", form);
             } else {
-                await axios.post("/academic/profile", form);
+                res = await axios.post("/academic/profile", form);
             }
 
-            setShowForm(false);   // ✅ close form
-            await loadProfile();  // ✅ refresh data
+            const saved = res?.data?.data ?? form; // ✅ immediate local update
+            setForm(saved);
+            setExists(true);
+            setShowForm(false);
+
+            if (onProfileSaved) {
+                await onProfileSaved();
+            }
         } catch {
-            alert(t("profile.error_save"));
+            alert("Save failed");
+        } finally {
+            setLoading(false);
         }
-
-        setLoading(false);
     };
-
     const handleDelete = async () => {
-        if (!confirm(t("profile.confirm_delete"))) return;
+        if (!confirm("Are you sure?")) return;
 
         try {
             await axios.delete("/academic/profile");
@@ -79,8 +86,13 @@ export default function AcademicProfileCard() {
 
             setExists(false);
             setEditing(false);
+
+            // 🔥 IMPORTANT LINE
+            if (onProfileDeleted) {
+                onProfileDeleted();
+            }
         } catch {
-            alert(t("profile.error_delete"));
+            alert("Delete failed");
         }
     };
     function Info({ label, value }) {
@@ -113,7 +125,7 @@ export default function AcademicProfileCard() {
                         onClick={() => setShowForm(true)}
                         className="flex items-center gap-1 text-blue-600"
                     >
-                        <Pencil size={16} /> {t("profile.edit")}
+                        <Pencil size={16} /> {t("Profile Edit")}
                     </button>
                 )}
             </div>

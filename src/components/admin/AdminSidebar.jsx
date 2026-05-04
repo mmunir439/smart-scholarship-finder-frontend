@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import axios from "@/app/utils/axios"
 import {
     LayoutDashboard,
@@ -22,16 +23,13 @@ import { useTranslation } from "react-i18next";
 export default function AdminSidebar() {
     const [user, setUser] = useState({});
     const { t } = useTranslation();
+    const pathname = usePathname();
+    const router = useRouter();
 
     const getUser = async () => {
         try {
-            const res = await axios.get("/user/getUser");
-            setUser(res.data)
-            console.log("full response:", res.data);
-
-            // ✅ correct access
-            console.log(`user role: ${res.data.role}`);
-
+            const res = await axios.get("/user/getCurrentUser");
+            setUser(res.data);
         } catch (error) {
             console.log(error);
         }
@@ -40,7 +38,13 @@ export default function AdminSidebar() {
     useEffect(() => {
         getUser();
     }, []);
-    const pathname = usePathname();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("user");
+        sessionStorage.clear();
+        router.push("/login");
+    };
 
     return (
         <aside className="fixed left-0 top-0 h-full w-64 bg-[#0b1d3a] text-white flex flex-col">
