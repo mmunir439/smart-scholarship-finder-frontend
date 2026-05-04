@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
+import axios from "@/app/utils/axios"
 import {
     LayoutDashboard,
     BookOpen,
@@ -64,7 +65,7 @@ export default function AdminSidebar() {
                                 }`}
                         >
                             <Icon size={18} />
-                            {t("label")}
+                            {t(label)}
                         </Link>
                     );
                 })}

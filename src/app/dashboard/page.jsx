@@ -1,21 +1,14 @@
 "use client";
-import react from "react"
 import React, { useState, useEffect } from "react";
 import { useContext } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import StatsCard from "@/components/dashboard/StatsCard";
-import {
-    CountryChart,
-    DegreeChart,
-    EligibilityChart,
-} from "@/components/dashboard/Charts";
 import { useTranslation } from "react-i18next";
-import AcademicProfileCard from "@/components/AcademicProfileCard";
+import AcademicProfileCard from "@/components/Profile";
 import axios from "@/app/utils/axios";
-
 export default function Page() {
     const { t } = useTranslation();
     const [user, setUser] = useState({});
+    const [profile, setProfile] = useState({});
     const [eligibleData, setEligibleData] = useState([]);
     const today = new Date().toLocaleDateString("en-US", {
         weekday: "long",
@@ -28,6 +21,16 @@ export default function Page() {
         try {
             const res = await axios.get("/user/getCurrentUser");
             setUser(res.data);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+    // ✅ Get academic/profile
+    const getProfile = async () => {
+        try {
+            const res = await axios.get("/academic/profile");
+            setProfile(res.data.data)
+            console.log(res.data.data)
         } catch (error) {
             console.log(error);
         }
@@ -46,7 +49,8 @@ export default function Page() {
             const res = await axios.get("/eligible");
 
             // 🔥 FIXED HERE
-            setEligibleData(res.data.data || []);
+            setEligibleData(res.data || []);
+            console.log(res.data)
         } catch (error) {
             console.log(error);
             setEligibleData([]); // fallback safety
@@ -55,24 +59,12 @@ export default function Page() {
 
     useEffect(() => {
         getUser();
+        getProfile();
         getEligible();
     }, []);
 
-    // ✅ Safe counts
-    const eligibleCount = eligibleData.filter(
-        (e) => e.status === "Eligible"
-    ).length;
-
-    const notEligibleCount = eligibleData.filter(
-        (e) => e.status === "Not Eligible"
-    ).length;
-
     return (
         <DashboardLayout>
-            {/* Header */}
-            <div className="bg-white border-b px-6 py-4 mb-6 rounded-lg shadow-sm">
-                <h2 className="text-lg font-semibold text-gray-800">t("Dashboard")</h2>
-            </div>
 
             {/* Greeting */}
             <div className="mb-6">
@@ -80,82 +72,61 @@ export default function Page() {
                     Welcome back, {user?.name || "User"} 👋
                 </h1>
                 <p className="text-gray-500">{today}</p>
-            </div>
 
+            </div>
             <AcademicProfileCard />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {eligibleData.map((item, index) => (
+                    <div
+                        key={index}
+                        className="bg-white shadow-md rounded-2xl p-5 border hover:shadow-xl transition"
+                    >
+                        {/* Title */}
+                        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+                            {item.name}
+                        </h2>
 
-            {/* ✅ Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <StatsCard title="Eligible" value={eligibleCount} />
-                <StatsCard title="Not Eligible" value={notEligibleCount} />
-            </div>
+                        {/* Country */}
+                        <p className="text-sm text-gray-500 mb-1">
+                            🌍 {item.country}
+                        </p>
 
-            {/* Charts */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                <CountryChart data={eligibleData} />
-                <EligibilityChart data={eligibleData} />
-                <DegreeChart data={eligibleData} />
-            </div>
+                        {/* Degree */}
+                        <p className="text-sm text-gray-500 mb-1">
+                            🎓 {item.degreeLevel}
+                        </p>
 
-            {/* ✅ Scholarships List */}
-            <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
-                <h2 className="text-lg font-semibold mb-4">
-                    Your Scholarships
-                </h2>
+                        {/* Deadline */}
+                        <p className="text-sm text-gray-500 mb-3">
+                            ⏰ Deadline: {item.deadline}
+                        </p>
 
-                {eligibleData.length === 0 ? (
-                    <p className="text-gray-500 text-sm">
-                        No scholarships found.
-                    </p>
-                ) : (
-                    <div className="space-y-3">
-                        {paginatedData.map((item, index) => (
-                            <div
-                                key={index}
-                                className="flex justify-between items-center border p-3 rounded-md hover:shadow-sm transition"
-                            >
-                                <div>
-                                    <h3 className="font-semibold">
-                                        {item?.scholarship?.name}
-                                    </h3>
-                                    <p className="text-sm text-gray-500">
-                                        {item?.scholarship?.country} •{" "}
-                                        {item?.scholarship?.degreeLevel}
-                                    </p>
-                                </div>
+                        {/* Status Badge */}
+                        <span className="inline-block text-xs px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 mb-3">
+                            status: {item.status}
+                        </span>
+                        {/* Status minCGPA */}
+                        <span className="inline-block text-xs px-3 py-1 rounded-full  text-yellow-700 mb-3">
+                            Recuired ielts: {item.ielts}
+                        </span>
+                        {/* Status Badge */}
+                        <span className="inline-block text-xs px-3 py-1 rounded-full  text-yellow-700 mb-3">
+                            Required cgpa: {item.cgpa}
+                        </span>
 
-                                {/* Status Badge */}
-                                <span
-                                    className={`px-3 py-1 text-sm rounded-full ${item.status === "Eligible"
-                                        ? "bg-green-100 text-green-600"
-                                        : "bg-red-100 text-red-600"
-                                        }`}
-                                >
-                                    {item.status}
-                                </span>
-                            </div>
-                        ))}
-                        <div className="flex justify-center mt-6 gap-2 flex-wrap">
-                            {Array.from(
-                                { length: Math.ceil(eligibleData.length / itemsPerPage) },
-                                (_, i) => (
-                                    <button
-                                        key={i}
-                                        onClick={() => setCurrentPage(i + 1)}
-                                        className={`px-3 py-1 rounded ${currentPage === i + 1
-                                            ? "bg-blue-600 text-white"
-                                            : "bg-gray-200"
-                                            }`}
-                                    >
-                                        {i + 1}
-                                    </button>
-                                )
-                            )}
-                        </div>
+                        {/* Button */}
+                        <a
+                            href={item.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="block text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                        >
+                            View Details
+                        </a>
                     </div>
-
-                )}
+                ))}
             </div>
+
         </DashboardLayout>
     );
 }

@@ -9,7 +9,7 @@ export default function DashboardNavbar() {
     return (
         <nav>
             <Link href="/" className="text-yellow-400">
-                {t("dashboard.nav")}
+                {t("dashboard")}
             </Link>
         </nav>
     );

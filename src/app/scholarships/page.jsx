@@ -18,7 +18,7 @@ export default function ScholarshipsPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get("/admin/scholarships");
+                const res = await axios.get("/scholarship/all");
                 setScholarships(res.data.data || res.data.scholarships || []);
             } catch (error) {
                 console.log(error);
