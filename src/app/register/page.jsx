@@ -1,13 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "../utils/axios";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
+import { speak } from "../utils/voiceAssistant";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useTranslation } from "react-i18next";
+import { FiVolume2 } from "react-icons/fi";
 
 export default function Register() {
   const { t } = useTranslation();
@@ -25,7 +27,13 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+useEffect(() => {
+    speak("Please enter your academic details");
+  }, []);
 
+  const handleVoiceHelp = () => {
+    speak("This is the registration form. Enter your name, email, password, and confirm password to create an account.");
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -47,7 +55,6 @@ export default function Register() {
     if (form.password !== form.confirmPassword) return "Passwords do not match";
     return null;
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -93,31 +100,56 @@ export default function Register() {
       <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-100">
         <div className="mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-6 sm:px-6 sm:py-10 lg:px-8">
           <div className="grid w-full overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 lg:grid-cols-2">
-            {/* Top info for mobile */}
             <div className="bg-gradient-to-br from-orange-500 to-orange-600 p-6 text-white lg:hidden">
-              <p className="mb-3 inline-flex rounded-full bg-white/15 px-4 py-1 text-xs font-medium backdrop-blur">
-                {t("register.title")}
-              </p>
-              <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
-                Create your account in a clean, simple step.
-              </h1>
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="mb-3 inline-flex rounded-full bg-white/15 px-4 py-1 text-xs font-medium backdrop-blur">
+                    {t("register.title")}
+                  </p>
+                  <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
+                    Create your account in a clean, simple step.
+                  </h1>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleVoiceHelp}
+                  className="inline-flex items-center justify-center rounded-full bg-white/15 p-3 text-white hover:bg-white/25 transition"
+                  aria-label="Voice help"
+                  title="Voice help"
+                >
+                  <FiVolume2 />
+                </button>
+              </div>
+
               <p className="mt-3 text-sm text-orange-100 sm:text-base">
                 Join the smart scholarship guiding platform and start managing your profile with a secure and modern registration flow.
               </p>
             </div>
 
-            {/* Left side */}
             <div className="hidden bg-gradient-to-br from-orange-500 to-orange-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-12">
-              <div>
-                <p className="mb-4 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
-                  {t("register.title")}
-                </p>
-                <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
-                  Create your account in a clean, simple step.
-                </h1>
-                <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
-                  Join the smart scholarship guiding platform and start managing your profile with a secure and modern registration flow.
-                </p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="mb-4 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
+                    {t("register.title")}
+                  </p>
+                  <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
+                    Create your account in a clean, simple step.
+                  </h1>
+                  <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
+                    Join the smart scholarship guiding platform and start managing your profile with a secure and modern registration flow.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleVoiceHelp}
+                  className="mt-2 inline-flex items-center justify-center rounded-full bg-white/15 p-3 text-white hover:bg-white/25 transition"
+                  aria-label="Voice help"
+                  title="Voice help"
+                >
+                  <FiVolume2 />
+                </button>
               </div>
 
               <div className="mt-10 space-y-3 text-sm text-orange-100">
@@ -241,11 +273,10 @@ export default function Register() {
 
                   <button
                     disabled={loading || !isMatch}
-                    className={`flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-lg transition sm:text-base ${
-                      loading || !isMatch
-                        ? "cursor-not-allowed bg-gray-400"
-                        : "bg-orange-500 hover:bg-orange-600 active:scale-[0.99]"
-                    }`}
+                    className={`flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-lg transition sm:text-base ${loading || !isMatch
+                      ? "cursor-not-allowed bg-gray-400"
+                      : "bg-orange-500 hover:bg-orange-600 active:scale-[0.99]"
+                      }`}
                   >
                     {loading ? "Loading..." : t("register.button")}
                   </button>

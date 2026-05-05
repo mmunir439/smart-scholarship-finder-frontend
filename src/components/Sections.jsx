@@ -12,7 +12,7 @@ export default function Sections() {
     const topScholarships = scholarships.slice(0, 3);
 
     useEffect(() => {
-        axios.get("/admin/scholarships").then((res) =>
+        axios.get("/scholarship/all").then((res) =>
             setScholarships(res.data.scholarships || res.data.data)
         );
     }, []);

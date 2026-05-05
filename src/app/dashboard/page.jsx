@@ -5,6 +5,8 @@ import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useTranslation } from "react-i18next";
 import AcademicProfileCard from "@/components/Profile";
 import axios from "@/app/utils/axios";
+import { speak } from "../utils/voiceAssistant";
+
 import {
     FiCalendar,
     FiExternalLink,
@@ -12,6 +14,7 @@ import {
     FiAward,
     FiFileText,
     FiRefreshCw,
+    FiVolume2,
 } from "react-icons/fi";
 
 export default function Page() {
@@ -20,6 +23,7 @@ export default function Page() {
     const [user, setUser] = useState({});
     const [profile, setProfile] = useState(null);
     const [eligibleData, setEligibleData] = useState([]);
+    const [ttsText, setTtsText] = useState(""); // optional, if needed later
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
@@ -61,7 +65,11 @@ export default function Page() {
             setError("");
 
             const res = await axios.get("/eligible");
-            setEligibleData(Array.isArray(res.data) ? res.data : []);
+
+            // ✅ API shape: { results: [...], ttsText: "..." }
+            const list = res.data?.results ?? res.data?.data ?? [];
+            setEligibleData(Array.isArray(list) ? list : []);
+            setTtsText(res.data?.ttsText || "");
         } catch (error) {
             console.log(error);
             setEligibleData([]);
@@ -77,20 +85,44 @@ export default function Page() {
         getEligible();
     }, []);
 
-    const totalScholarships = eligibleData.length;
-    const activeScholarships = eligibleData.filter((item) => item?.status === "active").length;
+    const safeEligibleData = Array.isArray(eligibleData) ? eligibleData : [];
+
+    const totalScholarships = safeEligibleData.length;
+    const activeScholarships = safeEligibleData.filter((item) =>
+        String(item?.status || "").toLowerCase().includes("eligible")
+    ).length;
     const uniqueCountries = new Set(
-        eligibleData.map((item) => item?.country).filter(Boolean),
+        safeEligibleData.map((item) => item?.country).filter(Boolean),
     ).size;
 
     const totalPages = Math.max(1, Math.ceil(totalScholarships / itemsPerPage));
     const startIndex = (currentPage - 1) * itemsPerPage;
-    const paginatedData = eligibleData.slice(startIndex, startIndex + itemsPerPage);
+    const paginatedData = safeEligibleData.slice(startIndex, startIndex + itemsPerPage);
 
     const handleRefresh = async () => {
         await getProfile();
         await getEligible();
         setCurrentPage(1);
+    };
+    const handleEligibility = (status, name = "this scholarship") => {
+        if (!status) return;
+        speak(`You are ${status} for ${name}`);
+    };
+    const handleSpeakSummary = () => {
+        if (ttsText && ttsText.trim()) {
+            speak(ttsText);
+            return;
+        }
+
+        if (!safeEligibleData.length) {
+            speak("No eligible scholarships found. Complete your academic profile to see matches.");
+            return;
+        }
+
+        const count = safeEligibleData.length;
+        const topNames = safeEligibleData.slice(0, 3).map(s => s.name).filter(Boolean);
+        const topPhrase = topNames.length ? `Top matches include ${topNames.join(", ")}.` : "";
+        speak(`You have ${count} matched scholarships. ${topPhrase}`);
     };
 
     return (
@@ -113,14 +145,27 @@ export default function Page() {
                                 </p>
                             </div>
 
-                            <button
-                                type="button"
-                                onClick={handleRefresh}
-                                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10 w-full sm:w-auto"
-                            >
-                                <FiRefreshCw />
-                                Refresh
-                            </button>
+                            <div className="flex items-center gap-3 w-full sm:w-auto">
+                                <button
+                                    type="button"
+                                    onClick={handleRefresh}
+                                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10 w-full sm:w-auto"
+                                >
+                                    <FiRefreshCw />
+                                    Refresh
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleSpeakSummary}
+                                    disabled={loading}
+                                    className="inline-flex items-center justify-center rounded-2xl bg-white/8 px-3 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10"
+                                    aria-label="Speak summary"
+                                    title={ttsText ? "Read recommendations" : "Read summary"}
+                                >
+                                    <FiVolume2 />
+                                </button>
+                            </div>
                         </div>
                     </div>
 
@@ -250,14 +295,28 @@ export default function Page() {
                                                 </p>
                                             </div>
 
-                                            <span
-                                                className={`shrink-0 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${item.status === "active"
-                                                    ? "bg-emerald-50 text-emerald-700"
-                                                    : "bg-yellow-50 text-yellow-700"
-                                                    }`}
-                                            >
-                                                {item.status || "unknown"}
-                                            </span>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                                <span
+                                                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${item.status === "Eligible"
+                                                        ? "bg-emerald-50 text-emerald-700"
+                                                        : item.status === "Partially Eligible"
+                                                            ? "bg-yellow-50 text-yellow-700"
+                                                            : "bg-red-50 text-red-700"
+                                                        }`}
+                                                >
+                                                    {item.status || "unknown"}
+                                                </span>
+
+                                                <button
+                                                    type="button"
+                                                    onClick={() => handleEligibility(item.status, item.name)}
+                                                    className="inline-flex items-center justify-center rounded-full border border-gray-200 bg-white p-2 text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition"
+                                                    aria-label={`Listen to eligibility for ${item.name}`}
+                                                    title="Voice assist"
+                                                >
+                                                    <FiVolume2 size={16} />
+                                                </button>
+                                            </div>
                                         </div>
 
                                         <div className="mt-5 space-y-3 text-sm text-gray-600">

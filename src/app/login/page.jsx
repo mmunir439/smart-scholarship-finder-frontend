@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "../utils/axios";
@@ -9,6 +9,8 @@ import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import { useTranslation } from "react-i18next";
+import { speak } from "../utils/voiceAssistant";
+import { FiVolume2 } from "react-icons/fi";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -21,7 +23,15 @@ export default function Login() {
   });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  useEffect(() => {
+    speak("Welcome back. Please enter your email and password to sign in.");
+  }, []);
 
+  const handleVoiceHelp = () => {
+    speak(
+      "This is the login page. Enter your email address, then your password. Use the show password button if needed, and then press the sign in button."
+    );
+  };
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setLoginError("");
@@ -71,17 +81,30 @@ export default function Login() {
           <div className="grid w-full overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 lg:grid-cols-2">
             {/* Left side */}
             <div className="hidden bg-gradient-to-br from-orange-500 to-orange-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-12">
-              <div>
-                <p className="mb-4 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
-                  {t("login.title")}
-                </p>
-                <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
-                  Welcome back to your scholarship dashboard.
-                </h1>
-                <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
-                  Sign in securely to manage your account, profile, and applications with a modern experience.
-                </p>
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="mb-4 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
+                    {t("login.title")}
+                  </p>
+                  <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
+                    Welcome back to your scholarship dashboard.
+                  </h1>
+                  <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
+                    Sign in securely to manage your account, profile, and applications with a modern experience.
+                  </p>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={handleVoiceHelp}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25"
+                  aria-label="Voice help"
+                  title="Voice help"
+                >
+                  <FiVolume2 />
+                </button>
               </div>
+
 
               <div className="mt-10 space-y-3 text-sm text-orange-100">
                 <div className="flex items-center gap-3">
@@ -102,13 +125,25 @@ export default function Login() {
             {/* Right side */}
             <div className="p-5 sm:p-8 lg:p-10">
               <div className="mx-auto flex w-full max-w-md flex-col justify-center lg:max-w-xl">
-                <div className="mb-8 text-center lg:text-left">
-                  <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
-                    {t("login.title")}
-                  </h2>
-                  <p className="mt-2 text-sm text-gray-600 sm:text-base">
-                    {t("login.subtitle")}
-                  </p>
+                <div className="mb-8 flex items-center justify-between gap-3 text-center lg:text-left">
+                  <div className="text-left">
+                    <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">
+                      {t("login.title")}
+                    </h2>
+                    <p className="mt-2 text-sm text-gray-600 sm:text-base">
+                      {t("login.subtitle")}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={handleVoiceHelp}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:bg-gray-50 lg:hidden"
+                    aria-label="Voice help"
+                    title="Voice help"
+                  >
+                    <FiVolume2 />
+                  </button>
                 </div>
 
                 {loginError && (

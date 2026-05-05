@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import axios from "@/app/utils/axios";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import Link from "next/link"
+import { FiVolume2 } from "react-icons/fi";
+import { speak } from "@/app/utils/voiceAssistant";
 import {
     Chart as ChartJS,
     ArcElement,
@@ -56,6 +58,7 @@ export default function ChartsPage() {
     const [eligibleData, setEligibleData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [ttsText, setTtsText] = useState("");
     const [profileMissing, setProfileMissing] = useState(false);
     const smallChartOptions = {
         responsive: true,
@@ -80,7 +83,8 @@ export default function ChartsPage() {
             setProfileMissing(false);
 
             const res = await axios.get("/eligible");
-            setEligibleData(res.data || []);
+            const list = res.data?.results || [];
+            setEligibleData(Array.isArray(list) ? list : []);
         } catch (err) {
             const status = err?.response?.status;
             const message = err?.response?.data?.message || "";
@@ -95,10 +99,19 @@ export default function ChartsPage() {
             setLoading(false);
         }
     };
-
     useEffect(() => {
         getEligible();
     }, []);
+    const summaryText = React.useMemo(() => {
+        if (ttsText && ttsText.trim()) return ttsText;
+        if (!Array.isArray(eligibleData) || eligibleData.length === 0) {
+            return "No eligible scholarships found. Complete your academic profile to get matches.";
+        }
+        const count = eligibleData.length;
+        const top = eligibleData.slice(0, 5).map(s => s.name).filter(Boolean);
+        const topPhrase = top.length ? `Top matches include ${top.join(", ")}.` : "";
+        return `You have ${count} matched scholarships. ${topPhrase}`;
+    }, [ttsText, eligibleData]);
     // ---------- add these derived datasets ----------
     const statusCounts = React.useMemo(() => {
         const counts = { Eligible: 0, Maybe: 0, "Not Eligible": 0 };
@@ -158,62 +171,89 @@ export default function ChartsPage() {
     // ---------- end derived datasets ----------
     return (
         <DashboardLayout>
-            {loading && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <SkeletonCard />
-                    <SkeletonCard />
-                    <SkeletonCard wide />
-                </div>
-            )}
-
-            {profileMissing && !loading && (
-                <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-xl p-5 text-center">
-                    <h2 className="font-semibold text-lg">Academic profile is missing</h2>
-                    <p className="text-sm mt-1">
-                        Please complete your academic profile to view eligibility charts.
-                        <Link
-                            href="/dashboard"
-                            className="inline-flex items-center justify-center mt-3 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
-                        >
-                            Enter Profile
-                        </Link>
-                    </p>
-                </div>
-            )}
-
-            {error && (
-                <div className="text-center text-red-500">
-                    {error}
-                </div>
-            )}
-
-            {!loading && !error && !profileMissing && eligibleData.length === 0 && (
-                <div className="text-center text-gray-400">
-                    No data found
-                </div>
-            )}
-
             {!loading && !error && !profileMissing && eligibleData.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <ChartCard title="Eligibility" subtitle="Overview">
-                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
-                            <Pie data={statusData} options={smallChartOptions} />
-                        </div>
-                    </ChartCard>
-
-                    <ChartCard title="Countries" subtitle="Distribution">
-                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
-                            <Bar data={countryData} options={smallBarOptions} />
-                        </div>
-                    </ChartCard>
-
-                    <ChartCard title="Degree Level" subtitle="Breakdown" wide>
-                        <div className="mx-auto w-full max-w-xs h-44 md:h-56">
-                            <Doughnut data={degreeData} options={smallChartOptions} />
-                        </div>
-                    </ChartCard>
+                <div className="flex items-center justify-end mb-4">
+                    <button
+                        type="button"
+                        onClick={() => speak(summaryText, localStorage.getItem("ttsLang") || "en-US")}
+                        className="inline-flex items-center gap-2 rounded-full border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700 hover:bg-gray-50 transition"
+                        aria-label="Read summary"
+                        title="Read summary"
+                    >
+                        <FiVolume2 />
+                        <span className="hidden sm:inline">Read summary</span>
+                    </button>
                 </div>
-            )}
-        </DashboardLayout>
+            )
+            }
+            {
+                loading && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <SkeletonCard />
+                        <SkeletonCard />
+                        <SkeletonCard wide />
+                    </div>
+                )
+            }
+
+            {
+                profileMissing && !loading && (
+                    <div className="bg-yellow-50 border border-yellow-200 text-yellow-800 rounded-xl p-5 text-center">
+                        <h2 className="font-semibold text-lg">Academic profile is missing</h2>
+                        <p className="text-sm mt-1">
+                            Please complete your academic profile to view eligibility charts.
+                            <Link
+                                href="/dashboard"
+                                className="inline-flex items-center justify-center mt-3 px-4 py-2 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition"
+                            >
+                                Enter Profile
+                            </Link>
+                        </p>
+                    </div>
+                )
+            }
+
+            {
+                error && (
+                    <div className="text-center text-red-500">
+                        {error}
+                    </div>
+                )
+            }
+
+            {
+                !loading && !error && !profileMissing && eligibleData.length === 0 && (
+                    <div className="text-center text-gray-400">
+                        No data found
+                    </div>
+                )
+            }
+
+            {
+                !loading && !error && !profileMissing && eligibleData.length > 0 && (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <ChartCard title="Eligibility" subtitle="Overview">
+                            <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                                <Pie data={statusData} options={smallChartOptions} />
+                            </div>
+                        </ChartCard>
+
+                        <ChartCard title="Countries" subtitle="Distribution">
+                            <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                                <Bar data={countryData} options={smallBarOptions} />
+                            </div>
+                        </ChartCard>
+
+                        <ChartCard title="Degree Level" subtitle="Breakdown" wide>
+                            <div className="mx-auto w-full max-w-xs h-44 md:h-56">
+                                <Doughnut data={degreeData} options={smallChartOptions} />
+                            </div>
+                        </ChartCard>
+
+                    </div>
+
+                )
+            }
+        </DashboardLayout >
     );
 }

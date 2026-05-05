@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import axios from "@/app/utils/axios";
 import { useRouter } from "next/navigation";
+import { speak } from "@/app/utils/voiceAssistant"
 
 export default function Navbar() {
   const router = useRouter();
@@ -70,7 +71,7 @@ export default function Navbar() {
     try {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
-    } catch {}
+    } catch { }
     setUser(null);
     setMenuOpen(false);
     router.push("/login");
