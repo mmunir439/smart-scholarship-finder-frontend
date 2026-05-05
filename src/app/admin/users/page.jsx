@@ -23,7 +23,7 @@ export default function User() {
         try {
             setLoading(true);
             setError("");
-            const res = await axios.get("/user/all");
+            const res = await axios.get("/user");
             setUsers(res?.data?.data ?? []);
         } catch (error) {
             console.log(error);

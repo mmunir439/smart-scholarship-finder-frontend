@@ -2,110 +2,92 @@
 
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
-
+import Image from "next/image";
 export default function Hero() {
     const { t } = useTranslation();
 
     return (
-        <section className="bg-[#0b1d3a] text-white px-10 py-20 flex flex-col md:flex-row items-center justify-between">
+        <section className="bg-[#0b1d3a] text-white px-4 sm:px-6 lg:px-10 py-12 sm:py-20">
+            <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-            {/* LEFT SIDE */}
-            <div className="max-w-xl">
-
-                {/* Badge */}
-                <div className="inline-block border border-orange-400 text-orange-400 text-xs px-3 py-1 rounded-full mb-6">
-                    ✨ {t("hero.badge")}
-                </div>
-
-                {/* Heading */}
-                <h1 className="text-5xl font-bold leading-tight mb-6">
-                    {t("hero.title")}{" "}
-                    <span className="text-orange-500 block">
-                        {t("hero.highlight")}
-                    </span>
-                </h1>
-
-                {/* Description */}
-                <p className="text-gray-300 mb-8">
-                    {t("hero.desc")}
-                </p>
-
-                {/* Buttons */}
-                <div className="flex gap-4 mb-6">
-                    <Link
-                        href="/register"
-                        className="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-md font-semibold"
-                    >
-                        {t("hero.start")} →
-                    </Link>
-
-                    <Link
-                        href="/scholarships"
-                        className="border border-gray-500 px-6 py-3 rounded-md hover:border-white"
-                    >
-                        {t("hero.browse")}
-                    </Link>
-                </div>
-
-                {/* Rating */}
-                <div className="flex items-center gap-3 text-sm text-gray-400">
-                    <span className="text-yellow-400">★★★★★</span>
-                    <span>{t("hero.trust")}</span>
-                </div>
-            </div>
-
-            {/* RIGHT SIDE CARD */}
-            <div className="mt-10 md:mt-0 bg-[#13264d] p-6 rounded-xl shadow-lg w-[320px]">
-
-                {/* Title */}
-                <div className="flex justify-between items-center mb-4">
-                    <div>
-                        <h3 className="font-semibold">
-                            {t("hero.card_title")}
-                        </h3>
-                        <p className="text-xs text-gray-400">
-                            {t("hero.card_country")}
-                        </p>
+                {/* LEFT - Text Content */}
+                <div className="order-2 md:order-1">
+                    <div className="inline-block border border-orange-400 text-orange-400 text-xs px-3 py-1 rounded-full mb-4">
+                        ✨ {t("hero.badge")}
                     </div>
 
-                    <span className="text-xs bg-orange-500 px-2 py-1 rounded">
-                        {t("hero.card_degree")}
-                    </span>
-                </div>
+                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4">
+                        {t("hero.title")}
+                        <span className="text-orange-500 block">{t("hero.highlight")}</span>
+                    </h1>
 
-                {/* Progress */}
-                <div className="mb-4">
-                    <p className="text-xs mb-1">
-                        {t("hero.card_match")}
+                    <p className="text-gray-300 mb-6 text-sm sm:text-base">
+                        {t("hero.desc")}
                     </p>
 
-                    <div className="w-full bg-gray-700 h-2 rounded">
-                        <div className="bg-orange-500 h-2 rounded w-[94%]"></div>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+                        <Link
+                            href="/register"
+                            className="inline-flex items-center justify-center w-full sm:w-auto bg-orange-500 hover:bg-orange-600 px-5 py-3 rounded-md font-semibold text-sm transition-colors"
+                        >
+                            {t("hero.start")} →
+                        </Link>
+
+                        <Link
+                            href="/scholarships"
+                            className="inline-flex items-center justify-center w-full sm:w-auto border border-gray-500 px-5 py-3 rounded-md hover:border-white text-sm transition-colors"
+                        >
+                            {t("hero.browse")}
+                        </Link>
                     </div>
 
-                    <p className="text-right text-xs mt-1 text-orange-400">
-                        94%
-                    </p>
+                    <div className="flex items-center gap-3 text-sm text-gray-400">
+                        <span className="text-yellow-400">★★★★★</span>
+                        <span>{t("hero.trust")}</span>
+                    </div>
+
+                    {/* Stats Row */}
+                    <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
+                        <div>
+                            <div className="text-2xl font-bold text-orange-500">500+</div>
+                            <div className="text-xs text-gray-400 mt-1">Scholarships Listed</div>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-orange-500">10K+</div>
+                            <div className="text-xs text-gray-400 mt-1">Students Helped</div>
+                        </div>
+                        <div>
+                            <div className="text-2xl font-bold text-orange-500">50+</div>
+                            <div className="text-xs text-gray-400 mt-1">Countries</div>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Info */}
-                <div className="flex justify-between text-sm">
-                    <div>
-                        <p className="text-gray-400 text-xs">
-                            {t("hero.card_funding")}
-                        </p>
-                        <p className="font-semibold">
-                            {t("hero.card_funding_value")}
-                        </p>
-                    </div>
+                {/* RIGHT - Clean Student Image Only */}
+                <div className="order-1 md:order-2 flex justify-center md:justify-end">
+                    <div className="relative w-full max-w-lg">
 
-                    <div>
-                        <p className="text-gray-400 text-xs">
-                            {t("hero.card_deadline")}
-                        </p>
-                        <p className="font-semibold">
-                            {t("hero.card_deadline_value")}
-                        </p>
+                        {/* Decorative glow behind image */}
+                        <div className="absolute -inset-2 bg-orange-500 opacity-10 blur-2xl rounded-3xl" />
+
+                        {/* Main Student Image */}
+                        <Image
+                            src="/munir.png"        // ✅ just /filename.png — no /public/ in the path
+                            alt="Student with scholarship"
+                            width={800}
+                            height={480}
+                            className="relative w-full h-[420px] sm:h-[480px] object-cover object-top rounded-2xl shadow-2xl"
+                            priority                // ✅ loads image immediately (good for hero)
+                        />
+
+                        {/* Subtle gradient at bottom for polish */}
+                        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0b1d3a] to-transparent rounded-b-2xl" />
+
+                        {/* Small floating badge - minimal, not a card */}
+                        <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
+                            🎓 AI-Powered Matching
+                        </div>
+
                     </div>
                 </div>
 
