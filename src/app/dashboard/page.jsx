@@ -94,7 +94,7 @@ export default function Page() {
     };
 
     return (
-        <DashboardLayout>
+        <DashboardLayout hideNavbar={true}>
             <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white">
                 <div className="w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6">
                     {/* Hero */}
@@ -252,8 +252,8 @@ export default function Page() {
 
                                             <span
                                                 className={`shrink-0 inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${item.status === "active"
-                                                        ? "bg-emerald-50 text-emerald-700"
-                                                        : "bg-yellow-50 text-yellow-700"
+                                                    ? "bg-emerald-50 text-emerald-700"
+                                                    : "bg-yellow-50 text-yellow-700"
                                                     }`}
                                             >
                                                 {item.status || "unknown"}

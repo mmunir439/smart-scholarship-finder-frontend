@@ -4,8 +4,6 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import axios from "@/app/utils/axios";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { Menu, X, LogOut, UserCircle2 } from "lucide-react";
 
 const navItems = [
@@ -58,8 +56,6 @@ export default function Sidebar({ children }) {
 
     return (
         <div className="min-h-screen bg-gray-50">
-            <Navbar />
-
             {/* Mobile hamburger button */}
             <button
                 type="button"
@@ -118,8 +114,8 @@ export default function Sidebar({ children }) {
                                     href={item.href}
                                     onClick={() => setOpen(false)}
                                     className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${active
-                                            ? "bg-white/10 border-l-4 border-orange-400 text-orange-400"
-                                            : "text-gray-300 hover:bg-white/5 hover:text-white"
+                                        ? "bg-white/10 border-l-4 border-orange-400 text-orange-400"
+                                        : "text-gray-300 hover:bg-white/5 hover:text-white"
                                         }`}
                                 >
                                     {item.name}
@@ -177,7 +173,6 @@ export default function Sidebar({ children }) {
                 </main>
             </div>
 
-            <Footer />
         </div>
     );
 }
