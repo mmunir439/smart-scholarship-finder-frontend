@@ -2,11 +2,12 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "@/app/utils/axios";
-import Navbar from "@/components/Navbar"
-import Footer from "@/components/Footer"
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import { Menu, X, LogOut, UserCircle2 } from "lucide-react";
+
 const navItems = [
     { name: "Dashboard", href: "/dashboard" },
     { name: "Home", href: "/" },
@@ -22,16 +23,19 @@ export default function Sidebar({ children }) {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
+        localStorage.removeItem("user");
         sessionStorage.clear();
-        router.push("/login");
+        setOpen(false);
+        router.replace("/login");
     };
 
     const getUser = async () => {
         try {
             const res = await axios.get("/user/getCurrentUser");
-            setUser(res?.data || {});
+            setUser(res?.data?.user ?? res?.data ?? {});
         } catch (error) {
             console.log(error);
+            setUser({});
         }
     };
 
@@ -39,111 +43,141 @@ export default function Sidebar({ children }) {
         if (!name) return "U";
         return name
             .split(" ")
+            .filter(Boolean)
             .map((word) => word[0])
             .join("")
-            .toUpperCase();
+            .toUpperCase()
+            .slice(0, 2);
     };
 
     useEffect(() => {
         getUser();
     }, []);
 
+    const initials = useMemo(() => getInitials(user?.name), [user?.name]);
+
     return (
-        <>
+        <div className="min-h-screen bg-gray-50">
             <Navbar />
-            <div className="flex min-h-screen">
-                {/* Mobile hamburger button */}
+
+            {/* Mobile hamburger button */}
+            <button
+                type="button"
+                onClick={() => setOpen(true)}
+                className="md:hidden fixed top-4 left-4 z-[70] inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#0b1d3a] text-white shadow-lg"
+                aria-label="Open menu"
+            >
+                <Menu size={22} />
+            </button>
+
+            {/* Overlay */}
+            {open && (
                 <button
-                    onClick={() => setOpen(!open)}
-                    className="md:hidden fixed z-50 top-4 left-4 bg-white/90 text-slate-800 p-2 rounded shadow"
-                    aria-label="Toggle menu"
-                >
-                    {open ? <X size={20} /> : <Menu size={20} />}
-                </button>
+                    type="button"
+                    onClick={() => setOpen(false)}
+                    className="md:hidden fixed inset-0 z-[60] bg-black/50"
+                    aria-label="Close menu overlay"
+                />
+            )}
 
-                {/* Mobile overlay backdrop */}
-                {open && (
-                    <div
-                        className="fixed inset-0 bg-black/40 z-40 md:hidden"
-                        onClick={() => setOpen(false)}
-                        aria-hidden
-                    />
-                )}
-
-                {/* Sidebar - Desktop fixed, Mobile overlay */}
+            <div className="flex min-h-screen">
+                {/* Sidebar */}
                 <aside
-                    className={`bg-[#0b1d3a] text-white w-64 p-5 space-y-6 fixed top-0 left-0 h-full z-40 transition-transform duration-300
-        ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
+                    className={`fixed top-0 left-0 z-[65] h-full w-64 sm:w-72 bg-[#0b1d3a] text-white flex flex-col shadow-2xl border-r border-white/10 transform transition-transform duration-300 ease-in-out
+          ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
                 >
-                    {/* Logo */}
-                    <div className="flex items-center justify-between">
-                        <h1 className="text-xl font-bold text-orange-400">SSG System</h1>
-                        <button
-                            onClick={() => setOpen(false)}
-                            className="md:hidden p-1 hover:bg-white/10 rounded"
-                            aria-label="Close menu"
-                        >
-                            <X size={18} />
-                        </button>
+                    {/* Header */}
+                    <div className="px-5 py-5 border-b border-white/10">
+                        <div className="flex items-center justify-between gap-3">
+                            <div>
+                                <h1 className="text-lg sm:text-xl font-bold text-orange-400">
+                                    SSG System
+                                </h1>
+                                <p className="text-xs text-gray-400">Student Panel</p>
+                            </div>
+
+                            <button
+                                type="button"
+                                onClick={() => setOpen(false)}
+                                className="md:hidden inline-flex items-center justify-center w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10"
+                                aria-label="Close sidebar"
+                            >
+                                <X size={18} />
+                            </button>
+                        </div>
                     </div>
 
-                    {/* Navigation */}
-                    <nav className="space-y-2">
-                        {navItems.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                onClick={() => setOpen(false)}
-                            >
-                                <div
-                                    className={`p-3 rounded-lg cursor-pointer transition ${path === item.href
-                                        ? "bg-white/10 border-l-4 border-orange-400 text-orange-400"
-                                        : "hover:bg-white/5 text-gray-300"
+                    {/* Nav */}
+                    <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto">
+                        {navItems.map((item) => {
+                            const active = path === item.href;
+
+                            return (
+                                <Link
+                                    key={item.name}
+                                    href={item.href}
+                                    onClick={() => setOpen(false)}
+                                    className={`block px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${active
+                                            ? "bg-white/10 border-l-4 border-orange-400 text-orange-400"
+                                            : "text-gray-300 hover:bg-white/5 hover:text-white"
                                         }`}
                                 >
                                     {item.name}
-                                </div>
-                            </Link>
-                        ))}
+                                </Link>
+                            );
+                        })}
                     </nav>
 
-                    {/* User Section - Bottom */}
-                    <div className="absolute bottom-6 left-5 right-5 space-y-3">
-                        {/* User Info Card */}
-                        <div className="bg-white/10 p-3 rounded-lg flex items-center gap-3">
-                            <div className="w-10 h-10 bg-yellow-400 text-black rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">
-                                {getInitials(user?.name)}
+                    {/* User Section */}
+                    <div className="px-4 pb-5 pt-4 border-t border-white/10">
+                        <div className="bg-white/10 rounded-2xl p-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 bg-orange-400 text-black rounded-full flex items-center justify-center font-bold text-sm shrink-0">
+                                    {initials}
+                                </div>
+
+                                <div className="min-w-0">
+                                    <p className="text-sm font-semibold truncate">
+                                        {user?.name || "User"}
+                                    </p>
+                                    <p className="text-xs text-gray-300 truncate">
+                                        {user?.role || "student"}
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="min-w-0 flex-1">
-                                <p className="text-sm font-semibold truncate">{user?.name || "User"}</p>
-                                <p className="text-xs text-gray-300 truncate">
-                                    {user?.role || "student"}
-                                </p>
-                            </div>
-                        </div>
+                            <div className="mt-4 grid grid-cols-2 gap-2">
+                                <Link
+                                    href="/profile"
+                                    onClick={() => setOpen(false)}
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 px-3 py-2 text-sm transition"
+                                >
+                                    <UserCircle2 size={16} />
+                                    Profile
+                                </Link>
 
-                        {/* Action Buttons */}
-                        <div className="flex gap-2">
-                            <button className="flex-1 text-xs py-2 px-3 rounded bg-white/10 hover:bg-white/20 transition">
-                                Profile
-                            </button>
-                            <button
-                                onClick={handleLogout}
-                                className="flex-1 text-xs py-2 px-3 rounded bg-red-600/20 hover:bg-red-600/30 text-red-300 hover:text-red-200 transition"
-                            >
-                                Logout
-                            </button>
+                                <button
+                                    type="button"
+                                    onClick={handleLogout}
+                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 px-3 py-2 text-sm text-red-300 hover:text-red-200 transition"
+                                >
+                                    <LogOut size={16} />
+                                    Logout
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </aside>
 
                 {/* Main Content */}
-                <main className="flex-1 md:ml-64 w-full">
-                    {children}
+                <main className="flex-1 w-full md:ml-64 lg:ml-72">
+                    <div className="w-full min-h-screen overflow-x-hidden">
+                        {children}
+                    </div>
                 </main>
             </div>
+
             <Footer />
-        </>
+        </div>
     );
 }
