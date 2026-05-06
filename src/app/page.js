@@ -13,7 +13,6 @@ export default function Home() {
       <Navbar />
       <Hero />
       <Works />
-
       <Sections />
       <Footer />
     </>
