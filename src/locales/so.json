@@ -30,11 +30,20 @@
     "title": "Ku soo dhawoow mar kale",
     "subtitle": "Gal si aad u sii waddo safarkaaga deeqaha waxbarasho.",
 
+    "badge": "Bogga galitaanka",
+    "left_title": "Ku soo noqo dashboard-kaaga deeqaha waxbarasho",
+    "left_desc": "Si ammaan ah u gal si aad u maamusho akoonkaaga, profile-kaaga, iyo codsiyadaada.",
+    "feature1": "Naqshad nadiif ah oo ka jawaabta dhammaan qalabka",
+    "feature2": "Gelitaan ammaan ah",
+    "feature3": "Degdeg u gal dashboard-ka",
+    "voice_help": "Caawinaad cod",
+    "forgot_password": "Miyaad illowday erayga sirta ah?",
+
     "email": "Email",
     "email_placeholder": "Geli emailkaaga",
 
-    "password": "Password",
-    "password_placeholder": "Geli password-kaaga",
+    "password": "Furaha sirta",
+    "password_placeholder": "Geli furaha sirta",
 
     "show": "Muuji",
     "hide": "Qari",
@@ -42,11 +51,11 @@
     "button": "Gal",
     "loading": "Waa la galayaa...",
 
-    "new_here": "Cusub ma tahay?",
+    "new_here": "Ma cusub tahay?",
     "create_account": "Samee akoon",
 
     "error_required": "Dhammaan meelaha waa qasab",
-    "error_invalid": "Email ama password khaldan",
+    "error_invalid": "Email ama furaha sirta waa khaldan yihiin",
     "success": "Si guul leh ayaad u gashay 🎉"
   },
   "contact": {
