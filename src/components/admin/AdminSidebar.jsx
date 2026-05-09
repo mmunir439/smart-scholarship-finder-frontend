@@ -8,7 +8,6 @@ import {
   LayoutDashboard,
   BookOpen,
   Users,
-  Settings,
   LogOut,
   Menu,
   X,
@@ -20,7 +19,6 @@ const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
   { label: "Scholarships", href: "/admin/scholarships", icon: BookOpen },
   { label: "Users", href: "/admin/users", icon: Users },
-  { label: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
 export default function AdminSidebar() {
@@ -99,11 +97,10 @@ export default function AdminSidebar() {
                 key={href}
                 href={href}
                 onClick={() => setIsOpen(false)}
-                className={`group flex items-center justify-between gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${
-                  active
-                    ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
-                    : "text-gray-300 hover:bg-white/8 hover:text-white"
-                }`}
+                className={`group flex items-center justify-between gap-3 px-4 py-3 rounded-2xl text-sm font-medium transition-all duration-200 ${active
+                  ? "bg-orange-500 text-white shadow-lg shadow-orange-500/20"
+                  : "text-gray-300 hover:bg-white/8 hover:text-white"
+                  }`}
               >
                 <div className="flex items-center gap-3 min-w-0">
                   <Icon size={18} className="shrink-0" />
@@ -112,11 +109,10 @@ export default function AdminSidebar() {
 
                 <ChevronRight
                   size={16}
-                  className={`shrink-0 transition-transform duration-200 ${
-                    active
-                      ? "translate-x-0 opacity-100"
-                      : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
-                  }`}
+                  className={`shrink-0 transition-transform duration-200 ${active
+                    ? "translate-x-0 opacity-100"
+                    : "-translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100"
+                    }`}
                 />
               </Link>
             );

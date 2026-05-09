@@ -26,16 +26,16 @@ export default function Footer() {
                         </p>
 
                         <div className="flex items-center gap-3 mt-6">
-                            <a aria-label="Facebook" href="#" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
+                            <a aria-label="Facebook" href="https://www.facebook.com/profile.php?id=100085467492304" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
                                 <FaFacebookF />
                             </a>
-                            <a aria-label="Twitter" href="#" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
+                            <a aria-label="Twitter" href="https://x.com/Muhamad_munir76" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
                                 <FaTwitter />
                             </a>
-                            <a aria-label="Instagram" href="#" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
+                            <a aria-label="Instagram" href="https://www.instagram.com/muhammadmunir6551/" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
                                 <FaInstagram />
                             </a>
-                            <a aria-label="LinkedIn" href="#" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
+                            <a aria-label="LinkedIn" href="https://www.linkedin.com/in/munirdev" className="w-9 h-9 flex items-center justify-center bg-white/6 rounded hover:bg-white/10 transition text-white">
                                 <FaLinkedinIn />
                             </a>
                         </div>

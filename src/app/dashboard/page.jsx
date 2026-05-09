@@ -73,7 +73,7 @@ export default function Page() {
         } catch (error) {
             console.log(error);
             setEligibleData([]);
-            setError("Failed to load scholarships");
+            setError("Add your profile to get scholarhisp recomendation");
         } finally {
             setLoading(false);
         }

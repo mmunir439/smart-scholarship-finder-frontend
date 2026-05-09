@@ -2,36 +2,33 @@ import { NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
 export async function proxy(request) {
-  const { pathname } = request.nextUrl;
-
   const token = request.cookies.get("token")?.value;
 
+  console.log("TOKEN:", token);
+
   if (!token) {
+    console.log("NO TOKEN");
+
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
   try {
-    // ✅ Must match your backend .env variable name exactly
-    const secret = new TextEncoder().encode(process.env.NEXT_PUBLIC_JWT);
-    const { payload } = await jwtVerify(token, secret);
-    const role = payload.role;
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-    if (pathname.startsWith("/admin") && role !== "admin") {
-      return NextResponse.redirect(new URL("/dashboard", request.url));
-    }
-
-    if (pathname.startsWith("/dashboard") && role === "admin") {
-      return NextResponse.redirect(new URL("/admin/dashboard", request.url));
-    }
+    await jwtVerify(token, secret);
 
     return NextResponse.next();
   } catch (err) {
+    console.log("INVALID TOKEN");
+
     const response = NextResponse.redirect(new URL("/login", request.url));
+
     response.cookies.delete("token");
+
     return response;
   }
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/dashboard/:path*"],
+  matcher: ["/dashboard", "/dashboard/:path*", "/admin", "/admin/:path*"],
 };
