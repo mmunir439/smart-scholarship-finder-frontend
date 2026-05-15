@@ -83,8 +83,8 @@ export default function ChartsPage() {
             setProfileMissing(false);
 
             const res = await axios.get("/eligible");
-            const list = res.data?.results || [];
-            setEligibleData(Array.isArray(list) ? list : []);
+            const list = Array.isArray(res.data) ? res.data : (res.data?.results || []);
+            setEligibleData(list);
         } catch (err) {
             const status = err?.response?.status;
             const message = err?.response?.data?.message || "";

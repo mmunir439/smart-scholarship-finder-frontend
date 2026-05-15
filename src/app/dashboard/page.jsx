@@ -67,8 +67,11 @@ export default function Page() {
             const res = await axios.get("/eligible");
 
             // ✅ API shape: { results: [...], ttsText: "..." }
-            const list = res.data?.results ?? res.data?.data ?? [];
-            setEligibleData(Array.isArray(list) ? list : []);
+            const list = Array.isArray(res.data)
+                ? res.data
+                : (res.data?.results ?? res.data?.data ?? []);
+
+            setEligibleData(list);
             setTtsText(res.data?.ttsText || "");
         } catch (error) {
             console.log(error);
