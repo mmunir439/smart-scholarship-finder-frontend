@@ -52,20 +52,23 @@ export default function Login() {
         password: form.password,
       });
 
-      setToken(res.data.token);
-      setUser(res.data.user);
+      console.log("LOGIN RESPONSE:", res.data);
+
+      const token = res.data.token || res.data.data?.token;
+      const user = res.data.user || res.data.data?.user;
+
+      if (!token || !user) {
+        throw new Error("Invalid login response");
+      }
+
+      setToken(token);
+      setUser(user);
 
       toast.success("Login successful");
-
-      setTimeout(() => {
-        if (res.data.user.role === "admin") {
-          router.push("/admin/dashboard");
-        } else {
-          router.push("/dashboard");
-        }
-      }, 800);
+      console.log("ROLE:", user.role);
+      router.replace(user.role === "admin" ? "/admin/dashboard" : "/dashboard");
     } catch (err) {
-      const message = err.response?.data?.message || "Invalid email or password";
+      const message = err.response?.data?.message || err.message || "Invalid email or password";
       setLoginError(message);
       toast.error(message);
     } finally {
