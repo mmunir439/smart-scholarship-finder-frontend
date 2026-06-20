@@ -3,16 +3,18 @@
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
+import GetStartedLink from "@/components/GetStartedLink";
 export default function Hero() {
     const { t } = useTranslation();
 
     return (
-        <section className="bg-[#0b1d3a] text-white px-4 sm:px-6 lg:px-10 py-12 sm:py-20">
-            <div className="mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
+        <section className="relative overflow-hidden bg-[#07162d] text-white px-4 sm:px-6 lg:px-10 py-12 sm:py-20">
+            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.2),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.12),transparent_40%)]" />
+            <div className="relative mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
                 {/* LEFT - Text Content */}
                 <div className="order-2 md:order-1">
-                    <div className="inline-block border border-orange-400 text-orange-400 text-xs px-3 py-1 rounded-full mb-4">
+                    <div className="edu-badge mb-4 text-orange-300 border-orange-400/50">
                         ✨ {t("hero.badge")}
                     </div>
 
@@ -26,12 +28,11 @@ export default function Hero() {
                     </p>
 
                     <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
-                        <Link
-                            href="/register"
+                        <GetStartedLink
                             className="inline-flex items-center justify-center w-full sm:w-auto bg-orange-500 hover:bg-orange-600 px-5 py-3 rounded-md font-semibold text-sm transition-colors"
                         >
                             {t("hero.start")} →
-                        </Link>
+                        </GetStartedLink>
 
                         <Link
                             href="/scholarships"
@@ -50,15 +51,15 @@ export default function Hero() {
                     <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
                         <div>
                             <div className="text-2xl font-bold text-orange-500">500+</div>
-                            <div className="text-xs text-gray-400 mt-1">Scholarships Listed</div>
+                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_scholarships")}</div>
                         </div>
                         <div>
                             <div className="text-2xl font-bold text-orange-500">10K+</div>
-                            <div className="text-xs text-gray-400 mt-1">Students Helped</div>
+                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_students")}</div>
                         </div>
                         <div>
                             <div className="text-2xl font-bold text-orange-500">50+</div>
-                            <div className="text-xs text-gray-400 mt-1">Countries</div>
+                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_countries")}</div>
                         </div>
                     </div>
                 </div>
@@ -72,7 +73,7 @@ export default function Hero() {
 
                         {/* Main Student Image */}
                         <Image
-                            src="/munir.png"        // ✅ just /filename.png — no /public/ in the path
+                            src="/munir.jpeg"        // ✅ just /filename.png — no /public/ in the path
                             alt="Student with scholarship"
                             width={800}
                             height={480}
@@ -84,8 +85,8 @@ export default function Hero() {
                         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0b1d3a] to-transparent rounded-b-2xl" />
 
                         {/* Small floating badge - minimal, not a card */}
-                        <div className="absolute top-4 right-4 bg-orange-500 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg">
-                            🎓 AI-Powered Matching
+                        <div className="absolute top-4 right-4 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
+                            🎓 {t("hero.ai_badge")}
                         </div>
 
                     </div>

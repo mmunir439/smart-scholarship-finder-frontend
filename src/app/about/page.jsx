@@ -2,6 +2,7 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import GetStartedLink from "@/components/GetStartedLink";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 
@@ -169,9 +170,9 @@ export default function AboutPage() {
                         {t("about.cta_title")}
                     </h2>
 
-                    <button className="mt-6 rounded-md bg-[#F5A623] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 sm:text-base">
+                    <GetStartedLink className="mt-6 inline-flex rounded-md bg-[#F5A623] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 sm:text-base">
                         {t("about.cta_btn")}
-                    </button>
+                    </GetStartedLink>
                 </div>
             </section>
 

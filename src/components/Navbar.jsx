@@ -82,21 +82,21 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className="w-full bg-white shadow-sm">
+      <nav className="sticky top-0 z-40 w-full border-b border-gray-200/80 bg-white/95 backdrop-blur-md shadow-sm">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-4">
               <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-                <span className="text-2xl">🎓</span>
+                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#07162d] text-lg text-white shadow-md">🎓</span>
                 <span className="hidden sm:inline">
-                  <span className="text-gray-800">Smart</span>
-                  <span className="text-orange-500">Scholarship</span>
+                  <span className="text-[#07162d]">{t("navbar.brand_smart")}</span>
+                  <span className="text-orange-500"> {t("navbar.brand_scholarship")}</span>
                 </span>
               </Link>
-              <div className="hidden md:flex items-center gap-6 text-sm text-gray-700">
-                <Link href="/" className="hover:text-orange-600">{t("navbar.home")}</Link>
-                <Link href="/scholarships" className="hover:text-orange-600">{t("navbar.scholarships")}</Link>
-                <Link href="/how-it-works" className="hover:text-orange-600">{t("navbar.how")}</Link>
+              <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+                <Link href="/" className="transition hover:text-orange-600">{t("navbar.home")}</Link>
+                <Link href="/scholarships" className="transition hover:text-orange-600">{t("navbar.scholarships")}</Link>
+                <Link href="/how-it-works" className="transition hover:text-orange-600">{t("navbar.how")}</Link>
               </div>
             </div>
 
@@ -141,19 +141,19 @@ export default function Navbar() {
 
                         <div className="flex flex-col px-2 py-2">
                           <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <User size={16} /> Profile
+                            <User size={16} /> {t("navbar.profile")}
                           </Link>
 
                           <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <Grid size={16} /> Dashboard
+                            <Grid size={16} /> {t("navbar.dashboard")}
                           </Link>
 
                           <Link href="/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <Settings size={16} /> Settings
+                            <Settings size={16} /> {t("navbar.settings")}
                           </Link>
 
                           <button onClick={handleLogout} className="mt-2 flex items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-gray-50">
-                            <LogOut size={16} /> Logout
+                            <LogOut size={16} /> {t("navbar.logout")}
                           </button>
                         </div>
                       </div>
@@ -162,7 +162,7 @@ export default function Navbar() {
                 ) : (
                   <>
                     <Link href="/login" className="text-sm text-gray-700 hover:text-orange-600">{t("navbar.login")}</Link>
-                    <Link href="/register" className="ml-2 rounded-md bg-orange-500 px-4 py-2 text-sm font-semibold text-white hover:bg-orange-600">{t("navbar.register")}</Link>
+                    <Link href="/register" className="ml-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-orange-600">{t("navbar.register")}</Link>
                   </>
                 )}
               </div>
@@ -186,7 +186,11 @@ export default function Navbar() {
       >
         <div className="flex h-16 items-center justify-between px-4 border-b">
           <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            🎓 <span className="text-orange-500">Smart Scholarship</span>
+            🎓{" "}
+            <span>
+              <span className="text-[#07162d]">{t("navbar.brand_smart")}</span>
+              <span className="text-orange-500"> {t("navbar.brand_scholarship")}</span>
+            </span>
           </Link>
           <div className="flex items-center gap-3">
             <LanguageSwitcher />
@@ -197,10 +201,10 @@ export default function Navbar() {
         </div>
 
         <div className="px-6 py-6 overflow-y-auto">
-          <nav className="flex flex-col gap-4 text-gray-700">
-            <Link href="/" onClick={() => setOpen(false)} className="py-2">Home</Link>
-            <Link href="/scholarships" onClick={() => setOpen(false)} className="py-2">Scholarships</Link>
-            <Link href="/how-it-works" onClick={() => setOpen(false)} className="py-2">How it works</Link>
+          <nav className="flex flex-col gap-4 text-gray-700 font-medium">
+            <Link href="/" onClick={() => setOpen(false)} className="py-2">{t("navbar.home")}</Link>
+            <Link href="/scholarships" onClick={() => setOpen(false)} className="py-2">{t("navbar.scholarships")}</Link>
+            <Link href="/how-it-works" onClick={() => setOpen(false)} className="py-2">{t("navbar.how")}</Link>
           </nav>
 
           <div className="mt-6 border-t pt-6">
@@ -215,16 +219,16 @@ export default function Navbar() {
                 </div>
 
                 <div className="mt-4 flex flex-col gap-2">
-                  <Link href="/profile" onClick={() => setOpen(false)} className="py-2">Profile</Link>
-                  <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setOpen(false)} className="py-2">Dashboard</Link>
-                  <Link href="/settings" onClick={() => setOpen(false)} className="py-2">Settings</Link>
-                  <button onClick={() => { handleLogout(); setOpen(false); }} className="mt-2 text-left text-red-600">Logout</button>
+                  <Link href="/profile" onClick={() => setOpen(false)} className="py-2">{t("navbar.profile")}</Link>
+                  <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setOpen(false)} className="py-2">{t("navbar.dashboard")}</Link>
+                  <Link href="/settings" onClick={() => setOpen(false)} className="py-2">{t("navbar.settings")}</Link>
+                  <button onClick={() => { handleLogout(); setOpen(false); }} className="mt-2 text-left text-red-600">{t("navbar.logout")}</button>
                 </div>
               </>
             ) : (
               <>
-                <Link href="/login" onClick={() => setOpen(false)} className="block py-2">Login</Link>
-                <Link href="/register" onClick={() => setOpen(false)} className="mt-4 block w-full rounded-md bg-orange-500 px-4 py-2 text-center text-white font-semibold">Register</Link>
+                <Link href="/login" onClick={() => setOpen(false)} className="block py-2">{t("navbar.login")}</Link>
+                <Link href="/register" onClick={() => setOpen(false)} className="mt-4 block w-full rounded-xl bg-orange-500 px-4 py-2 text-center text-white font-semibold shadow-md">{t("navbar.register")}</Link>
               </>
             )}
           </div>

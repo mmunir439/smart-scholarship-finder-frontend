@@ -66,7 +66,6 @@ export default function Page() {
 
             const res = await axios.get("/eligible");
 
-            // ✅ API shape: { results: [...], ttsText: "..." }
             const list = Array.isArray(res.data)
                 ? res.data
                 : (res.data?.results ?? res.data?.data ?? []);
@@ -76,7 +75,7 @@ export default function Page() {
         } catch (error) {
             console.log(error);
             setEligibleData([]);
-            setError("Add your profile to get scholarhisp recomendation");
+            setError(t("dashboard.profile_error"));
         } finally {
             setLoading(false);
         }
@@ -109,7 +108,7 @@ export default function Page() {
     };
     const handleEligibility = (status, name = "this scholarship") => {
         if (!status) return;
-        speak(`You are ${status} for ${name}`);
+        speak(t("dashboard.voice_eligible", { status, name }));
     };
     const handleSpeakSummary = () => {
         if (ttsText && ttsText.trim()) {
@@ -118,14 +117,12 @@ export default function Page() {
         }
 
         if (!safeEligibleData.length) {
-            speak("No eligible scholarships found. Complete your academic profile to see matches.");
+            speak(t("dashboard.voice_summary_empty"));
             return;
         }
 
         const count = safeEligibleData.length;
-        const topNames = safeEligibleData.slice(0, 3).map(s => s.name).filter(Boolean);
-        const topPhrase = topNames.length ? `Top matches include ${topNames.join(", ")}.` : "";
-        speak(`You have ${count} matched scholarships. ${topPhrase}`);
+        speak(t("dashboard.voice_summary_count", { count }));
     };
 
     return (
@@ -141,10 +138,10 @@ export default function Page() {
                                     {today}
                                 </p>
                                 <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
-                                    Welcome back, {user?.name || "User"} 👋
+                                    {t("dashboard.welcome", { name: user?.name || "User" })} 👋
                                 </h1>
                                 <p className="mt-3 text-sm sm:text-base text-slate-300">
-                                    Track your academic profile and explore scholarships matched to your eligibility.
+                                    {t("dashboard.subtitle")}
                                 </p>
                             </div>
 
@@ -155,7 +152,7 @@ export default function Page() {
                                     className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10 w-full sm:w-auto"
                                 >
                                     <FiRefreshCw />
-                                    Refresh
+                                    {t("dashboard.refresh")}
                                 </button>
 
                                 <button
@@ -177,7 +174,7 @@ export default function Page() {
                         <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-sm text-gray-500">Eligible Scholarships</p>
+                                    <p className="text-sm text-gray-500">{t("dashboard.eligible_scholarships")}</p>
                                     <h3 className="text-3xl font-bold text-gray-900 mt-2">
                                         {loading ? "..." : totalScholarships}
                                     </h3>
@@ -191,7 +188,7 @@ export default function Page() {
                         <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-sm text-gray-500">Active Scholarships</p>
+                                    <p className="text-sm text-gray-500">{t("dashboard.active_scholarships")}</p>
                                     <h3 className="text-3xl font-bold text-gray-900 mt-2">
                                         {loading ? "..." : activeScholarships}
                                     </h3>
@@ -205,7 +202,7 @@ export default function Page() {
                         <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-sm text-gray-500">Countries</p>
+                                    <p className="text-sm text-gray-500">{t("dashboard.countries")}</p>
                                     <h3 className="text-3xl font-bold text-gray-900 mt-2">
                                         {loading ? "..." : uniqueCountries}
                                     </h3>
@@ -219,9 +216,9 @@ export default function Page() {
                         <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
-                                    <p className="text-sm text-gray-500">Profile Status</p>
+                                    <p className="text-sm text-gray-500">{t("dashboard.profile_status")}</p>
                                     <h3 className="text-2xl font-bold text-gray-900 mt-2">
-                                        {profile ? "Completed" : "Pending"}
+                                        {profile ? t("dashboard.completed") : t("dashboard.pending")}
                                     </h3>
                                 </div>
                                 <div className="h-12 w-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center">
@@ -256,10 +253,10 @@ export default function Page() {
                     <div className="flex items-center justify-between gap-3">
                         <div>
                             <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                                Recommended Scholarships
+                                {t("dashboard.recommended")}
                             </h2>
                             <p className="text-sm text-gray-500 mt-1">
-                                Scholarships matched to your current profile.
+                                {t("dashboard.recommended_desc")}
                             </p>
                         </div>
                     </div>
@@ -324,28 +321,28 @@ export default function Page() {
 
                                         <div className="mt-5 space-y-3 text-sm text-gray-600">
                                             <div className="flex items-center justify-between gap-3">
-                                                <span>Degree</span>
+                                                <span>{t("dashboard.degree")}</span>
                                                 <span className="font-medium text-gray-900">
                                                     {item.degreeLevel || "-"}
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center justify-between gap-3">
-                                                <span>Deadline</span>
+                                                <span>{t("dashboard.deadline")}</span>
                                                 <span className="font-medium text-gray-900">
                                                     {item.deadline || "-"}
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center justify-between gap-3">
-                                                <span>IELTS</span>
+                                                <span>{t("dashboard.ielts")}</span>
                                                 <span className="font-medium text-gray-900">
                                                     {item.ielts ?? "-"}
                                                 </span>
                                             </div>
 
                                             <div className="flex items-center justify-between gap-3">
-                                                <span>CGPA</span>
+                                                <span>{t("dashboard.cgpa")}</span>
                                                 <span className="font-medium text-gray-900">
                                                     {item.cgpa ?? item.minCGPA ?? "-"}
                                                 </span>
@@ -359,7 +356,7 @@ export default function Page() {
                                                 rel="noopener noreferrer"
                                                 className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#07162d] px-4 py-3 text-sm font-medium text-white hover:bg-[#0b2447] transition"
                                             >
-                                                View Details <FiExternalLink />
+                                                {t("dashboard.view_details")} <FiExternalLink />
                                             </a>
                                         </div>
                                     </div>
@@ -381,11 +378,11 @@ export default function Page() {
                                         disabled={currentPage === 1}
                                         className="rounded-xl border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
                                     >
-                                        Prev
+                                        {t("dashboard.prev")}
                                     </button>
 
                                     <span className="px-3 py-2 text-sm font-medium text-gray-700">
-                                        Page {currentPage} of {totalPages}
+                                        {t("dashboard.page", { current: currentPage, total: totalPages })}
                                     </span>
 
                                     <button
@@ -404,10 +401,10 @@ export default function Page() {
                     ) : (
                         <div className="rounded-3xl border border-dashed border-gray-300 bg-white p-10 text-center">
                             <h3 className="text-lg font-semibold text-gray-900">
-                                No scholarships found
+                                {t("dashboard.no_results_title")}
                             </h3>
                             <p className="text-sm text-gray-500 mt-2">
-                                Complete your academic profile to see eligible scholarships here.
+                                {t("dashboard.no_results_desc")}
                             </p>
                         </div>
                     )}

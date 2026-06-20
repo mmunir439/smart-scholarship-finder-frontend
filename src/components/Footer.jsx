@@ -2,12 +2,13 @@
 
 import { FaFacebookF, FaTwitter, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import Link from "next/link";
+import GetStartedLink from "@/components/GetStartedLink";
 import { useTranslation } from "react-i18next";
 
 export default function Footer() {
     const { t } = useTranslation();
     return (
-        <footer className="bg-[#0b1d3a] text-white pt-12 pb-8">
+        <footer className="bg-[#07162d] text-white pt-12 pb-8">
             <div className="max-w-7xl mx-auto px-6 lg:px-10">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
                     {/* LEFT */}
@@ -50,7 +51,7 @@ export default function Footer() {
                             <ul className="space-y-2">
                                 <li><Link href="/scholarships" className="text-gray-200 hover:text-white transition">{t("footer.scholarships")}</Link></li>
                                 <li><Link href="/how-it-works" className="text-gray-200 hover:text-white transition">{t("footer.how")}</Link></li>
-                                <li><Link href="/register" className="text-gray-200 hover:text-white transition">{t("footer.start")}</Link></li>
+                                <li><GetStartedLink className="text-gray-200 hover:text-white transition">{t("footer.start")}</GetStartedLink></li>
                             </ul>
                         </div>
 
@@ -73,8 +74,7 @@ export default function Footer() {
                     </div>
 
                     <div className="flex items-center gap-4">
-                        <Link href="/terms" className="hover:text-white transition">Terms</Link>
-                        <Link href="/privacy" className="hover:text-white transition">Privacy</Link>
+                        <Link href="/privacy" className="hover:text-white transition">{t("footer.privacy")}</Link>
                     </div>
                 </div>
             </div>

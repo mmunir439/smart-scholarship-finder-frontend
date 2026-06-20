@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import GetStartedLink from "@/components/GetStartedLink";
 import axios from "@/app/utils/axios";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -18,7 +19,7 @@ export default function Sections() {
     }, []);
 
     return (
-        <section className="bg-gray-50 py-20 space-y-24">
+        <section className="bg-gradient-to-b from-slate-50 to-white py-20 space-y-24">
 
             {/* FEATURED */}
             <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -48,7 +49,7 @@ export default function Sections() {
                     {topScholarships.map((item) => (
                         <div
                             key={item._id}
-                            className="bg-white p-5 rounded-xl shadow-sm hover:shadow-md transition"
+                            className="edu-card p-5 hover:-translate-y-0.5"
                         >
 
                             <p className="text-xs text-gray-500 mb-1">
@@ -93,12 +94,11 @@ export default function Sections() {
                     {t("sections.cta_desc")}
                 </p>
 
-                <Link
-                    href="/register"
-                    className="bg-orange-500 text-white px-6 py-3 rounded-md font-semibold hover:bg-orange-600"
+                <GetStartedLink
+                    className="inline-flex rounded-xl bg-orange-500 px-6 py-3 font-semibold text-white shadow-md transition hover:bg-orange-600"
                 >
                     {t("sections.cta_btn")}
-                </Link>
+                </GetStartedLink>
             </div>
 
         </section>

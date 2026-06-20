@@ -5,17 +5,20 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import axios from "@/app/utils/axios";
 import { Menu, X, LogOut, UserCircle2 } from "lucide-react";
-
-const navItems = [
-    { name: "Dashboard", href: "/dashboard" },
-    { name: "Home", href: "/" },
-    { name: "Eligible Scholarships", href: "/eligiblebyChart" },
-    { name: "Settings", href: "/settings" },
-];
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 
 export default function Sidebar({ children }) {
+    const { t } = useTranslation();
     const path = usePathname();
     const router = useRouter();
+
+    const navItems = [
+        { name: t("sidebar.dashboard"), href: "/dashboard" },
+        { name: t("sidebar.home"), href: "/" },
+        { name: t("sidebar.eligible"), href: "/eligiblebyChart" },
+        { name: t("sidebar.settings"), href: "/settings" },
+    ];
     const [user, setUser] = useState({});
     const [open, setOpen] = useState(false);
 
@@ -55,12 +58,12 @@ export default function Sidebar({ children }) {
     const initials = useMemo(() => getInitials(user?.name), [user?.name]);
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-slate-50">
             {/* Mobile hamburger button */}
             <button
                 type="button"
                 onClick={() => setOpen(true)}
-                className="md:hidden fixed top-4 left-4 z-[70] inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#0b1d3a] text-white shadow-lg"
+                className="md:hidden fixed top-4 left-4 z-[70] inline-flex items-center justify-center w-11 h-11 rounded-xl bg-[#07162d] text-white shadow-lg"
                 aria-label="Open menu"
             >
                 <Menu size={22} />
@@ -79,7 +82,7 @@ export default function Sidebar({ children }) {
             <div className="flex min-h-screen">
                 {/* Sidebar */}
                 <aside
-                    className={`fixed top-0 left-0 z-[65] h-full w-64 sm:w-72 bg-[#0b1d3a] text-white flex flex-col shadow-2xl border-r border-white/10 transform transition-transform duration-300 ease-in-out
+                    className={`fixed top-0 left-0 z-[65] h-full w-64 sm:w-72 bg-[#07162d] text-white flex flex-col shadow-2xl border-r border-white/10 transform transition-transform duration-300 ease-in-out
           ${open ? "translate-x-0" : "-translate-x-full md:translate-x-0"}`}
                 >
                     {/* Header */}
@@ -87,10 +90,12 @@ export default function Sidebar({ children }) {
                         <div className="flex items-center justify-between gap-3">
                             <div>
                                 <h1 className="text-lg sm:text-xl font-bold text-orange-400">
-                                    SSG System
+                                    {t("sidebar.title")}
                                 </h1>
-                                <p className="text-xs text-gray-400">Student Panel</p>
+                                <p className="text-xs text-gray-400">{t("sidebar.subtitle")}</p>
                             </div>
+
+                            <LanguageSwitcher className="hidden sm:block border-white/20 bg-white/10 text-white" />
 
                             <button
                                 type="button"
@@ -149,7 +154,7 @@ export default function Sidebar({ children }) {
                                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-white/10 hover:bg-white/20 px-3 py-2 text-sm transition"
                                 >
                                     <UserCircle2 size={16} />
-                                    Profile
+                                    {t("sidebar.profile")}
                                 </Link>
 
                                 <button
@@ -158,7 +163,7 @@ export default function Sidebar({ children }) {
                                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-red-600/20 hover:bg-red-600/30 px-3 py-2 text-sm text-red-300 hover:text-red-200 transition"
                                 >
                                     <LogOut size={16} />
-                                    Logout
+                                    {t("sidebar.logout")}
                                 </button>
                             </div>
                         </div>

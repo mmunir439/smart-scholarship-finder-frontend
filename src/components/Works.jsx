@@ -2,6 +2,7 @@
 
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
+import GetStartedLink from "@/components/GetStartedLink";
 
 export default function Works() {
     const { t } = useTranslation();
@@ -120,15 +121,14 @@ export default function Works() {
                     className="mt-12 flex flex-col items-center gap-4 sm:mt-16"
                 >
                     <p className="text-center text-sm text-gray-600 sm:text-base">
-                        Ready to find your perfect scholarship?
+                        {t("works.cta_text")}
                     </p>
 
-                    <a
-                        href="/register"
-                        className="inline-flex items-center justify-center rounded-lg bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-600 sm:px-8 sm:text-base"
+                    <GetStartedLink
+                        className="inline-flex items-center justify-center rounded-xl bg-orange-500 px-6 py-3 text-sm font-semibold text-white shadow-md transition hover:bg-orange-600 sm:px-8 sm:text-base"
                     >
-                        Get Started Free →
-                    </a>
+                        {t("works.cta_btn")} →
+                    </GetStartedLink>
                 </motion.div>
             </div>
         </section>

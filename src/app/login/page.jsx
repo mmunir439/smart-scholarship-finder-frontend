@@ -8,6 +8,9 @@ import { setToken, setUser } from "../utils/token";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
+import Button from "@/components/ui/Button";
+import { AuthPage, AuthCard, AuthHeroPanel, AuthFormPanel } from "@/components/ui/AuthShell";
+import { inputClass, labelClass } from "@/lib/styles";
 import { useTranslation } from "react-i18next";
 import { speak } from "../utils/voiceAssistant";
 import { FiVolume2 } from "react-icons/fi";
@@ -23,15 +26,17 @@ export default function Login() {
   });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
   useEffect(() => {
-    speak("Welcome back. Please enter your email and password to sign in.");
-  }, []);
+    speak(t("login.welcome_title"));
+  }, [t]);
 
   const handleVoiceHelp = () => {
     speak(
-      "This is the login page. Enter your email address, then your password. Use the show password button if needed, and then press the sign in button."
+      `${t("login.welcome_desc")} ${t("login.feature1")}. ${t("login.feature2")}. ${t("login.feature3")}.`
     );
   };
+
   const handleChange = (e) => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
     setLoginError("");
@@ -52,8 +57,6 @@ export default function Login() {
         password: form.password,
       });
 
-      console.log("LOGIN RESPONSE:", res.data);
-
       const token = res.data.token || res.data.data?.token;
       const user = res.data.user || res.data.data?.user;
 
@@ -64,11 +67,11 @@ export default function Login() {
       setToken(token);
       setUser(user);
 
-      toast.success("Login successful");
-      console.log("ROLE:", user.role);
+      toast.success(t("login.success"));
       router.replace(user.role === "admin" ? "/admin/dashboard" : "/dashboard");
     } catch (err) {
-      const message = err.response?.data?.message || err.message || "Invalid email or password";
+      const message =
+        err.response?.data?.message || err.message || t("login.error_invalid");
       setLoginError(message);
       toast.error(message);
     } finally {
@@ -79,21 +82,19 @@ export default function Login() {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-amber-100">
-        <div className="mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-          <div className="grid w-full overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 lg:grid-cols-2">
-            {/* Left side */}
-            <div className="hidden bg-gradient-to-br from-orange-500 to-orange-600 p-8 text-white lg:flex lg:flex-col lg:justify-between xl:p-12">
+      <AuthPage>
+        <AuthCard>
+            <AuthHeroPanel className="hidden lg:flex">
               <div className="flex items-start justify-between gap-4">
                 <div>
                   <p className="mb-4 inline-flex rounded-full bg-white/15 px-4 py-1 text-sm font-medium backdrop-blur">
                     {t("login.title")}
                   </p>
                   <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
-                    Welcome back to your scholarship dashboard.
+                    {t("login.welcome_title")}
                   </h1>
                   <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
-                    Sign in securely to manage your account, profile, and applications with a modern experience.
+                    {t("login.welcome_desc")}
                   </p>
                 </div>
 
@@ -101,32 +102,30 @@ export default function Login() {
                   type="button"
                   onClick={handleVoiceHelp}
                   className="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white/15 text-white transition hover:bg-white/25"
-                  aria-label="Voice help"
-                  title="Voice help"
+                  aria-label={t("login.voice_help")}
+                  title={t("login.voice_help")}
                 >
                   <FiVolume2 />
                 </button>
               </div>
 
-
               <div className="mt-10 space-y-3 text-sm text-orange-100">
                 <div className="flex items-center gap-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-white" />
-                  Clean and responsive layout
+                  {t("login.feature1")}
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-white" />
-                  Secure authentication flow
+                  {t("login.feature2")}
                 </div>
                 <div className="flex items-center gap-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-white" />
-                  Fast access to dashboard
+                  {t("login.feature3")}
                 </div>
               </div>
-            </div>
+            </AuthHeroPanel>
 
-            {/* Right side */}
-            <div className="p-5 sm:p-8 lg:p-10">
+            <AuthFormPanel>
               <div className="mx-auto flex w-full max-w-md flex-col justify-center lg:max-w-xl">
                 <div className="mb-8 flex items-center justify-between gap-3 text-center lg:text-left">
                   <div className="text-left">
@@ -142,8 +141,8 @@ export default function Login() {
                     type="button"
                     onClick={handleVoiceHelp}
                     className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-gray-200 bg-white text-gray-600 shadow-sm transition hover:bg-gray-50 lg:hidden"
-                    aria-label="Voice help"
-                    title="Voice help"
+                    aria-label={t("login.voice_help")}
+                    title={t("login.voice_help")}
                   >
                     <FiVolume2 />
                   </button>
@@ -157,7 +156,7 @@ export default function Login() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
-                    <label className="mb-1.5 block text-sm font-medium text-gray-700">
+                    <label className={labelClass}>
                       {t("login.email")}
                     </label>
                     <input
@@ -166,7 +165,7 @@ export default function Login() {
                       placeholder={t("login.email_placeholder")}
                       value={form.email}
                       onChange={handleChange}
-                      className="w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm text-gray-900 outline-none transition placeholder:text-gray-400 focus:border-orange-500 focus:ring-4 focus:ring-orange-100 sm:text-base"
+                      className={inputClass}
                     />
                   </div>
 
@@ -196,20 +195,13 @@ export default function Login() {
                       href="/forgot-password"
                       className="text-sm font-medium text-orange-500 hover:text-orange-600"
                     >
-                      Forgot Password?
+                      {t("login.forgot_password")}
                     </Link>
                   </div>
 
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className={`flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-sm font-semibold text-white shadow-lg transition sm:text-base ${loading
-                      ? "cursor-not-allowed bg-gray-400"
-                      : "bg-orange-500 hover:bg-orange-600 active:scale-[0.99]"
-                      }`}
-                  >
+                  <Button type="submit" disabled={loading} className="w-full" size="lg">
                     {loading ? t("login.loading") : t("login.button")}
-                  </button>
+                  </Button>
 
                   <p className="text-center text-sm text-gray-600">
                     {t("login.new_here")}{" "}
@@ -222,10 +214,9 @@ export default function Login() {
                   </p>
                 </form>
               </div>
-            </div>
-          </div>
-        </div>
-      </div>
+            </AuthFormPanel>
+        </AuthCard>
+      </AuthPage>
 
       <Footer />
     </>
