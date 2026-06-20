@@ -6,11 +6,16 @@ import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import axios from "@/app/utils/axios";
 import { useRouter } from "next/navigation";
-import { speak } from "@/app/utils/voiceAssistant"
+import { removeToken } from "@/app/utils/token";
+import { useAccessibility } from "@/context/AccessibilityContext";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
+import { stopSpeaking } from "@/app/utils/voiceAssistant";
 
 export default function Navbar() {
   const router = useRouter();
   const { t } = useTranslation();
+  const { resetGuestDefaults: resetAccessibility } = useAccessibility();
+  const { resetGuestDefaults: resetScholarshipPrefs } = useScholarshipPreferences();
 
   const [open, setOpen] = useState(false); // mobile menu
   const [menuOpen, setMenuOpen] = useState(false); // profile dropdown
@@ -69,9 +74,12 @@ export default function Navbar() {
 
   const handleLogout = () => {
     try {
-      localStorage.removeItem("token");
+      removeToken();
       localStorage.removeItem("user");
     } catch { }
+    stopSpeaking();
+    resetAccessibility();
+    resetScholarshipPrefs();
     setUser(null);
     setMenuOpen(false);
     router.push("/login");

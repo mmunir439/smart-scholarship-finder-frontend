@@ -2,33 +2,42 @@
 
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import axios from "@/app/utils/axios";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTranslation } from "react-i18next";
 import toast from "react-hot-toast";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
+import {
+    fetchScholarships,
+    getDegreeFilterLabel,
+    getRegionFilterLabel,
+    isScholarshipFilterActive,
+} from "@/lib/scholarshipPreferences";
 
 export default function ScholarshipsPage() {
     const { t } = useTranslation();
+    const { preferences, loaded: prefsLoaded } = useScholarshipPreferences();
     const [scholarships, setScholarships] = useState([]);
     const [visible, setVisible] = useState(8);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const visibleScholarships = scholarships.slice(0, visible);
-
-    // Remove duplicate useEffect - only keep one
     useEffect(() => {
+        setVisible(8);
+    }, [preferences.studyRegion, preferences.preferredDegree]);
+
+    useEffect(() => {
+        if (!prefsLoaded) return;
+
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const res = await axios.get("/scholarship/all");
-                const data = res.data.data || res.data.scholarships || [];
-                setScholarships(Array.isArray(data) ? data : []);
+                const data = await fetchScholarships(preferences);
+                setScholarships(data);
                 setError(null);
-            } catch (error) {
-                console.error("Error fetching scholarships:", error);
-                setError(error.response?.data?.message || "Failed to load scholarships");
+            } catch (err) {
+                console.error("Error fetching scholarships:", err);
+                setError(err.response?.data?.message || "Failed to load scholarships");
                 toast.error("Failed to load scholarships");
                 setScholarships([]);
             } finally {
@@ -37,13 +46,17 @@ export default function ScholarshipsPage() {
         };
 
         fetchData();
-    }, []);
+    }, [preferences, prefsLoaded]);
+
+    const isFiltered = isScholarshipFilterActive(preferences);
+    const regionLabel = getRegionFilterLabel(preferences.studyRegion, t);
+    const degreeLabel = getDegreeFilterLabel(preferences.preferredDegree, t);
+    const visibleScholarships = scholarships.slice(0, visible);
 
     return (
         <div className="min-h-screen bg-gray-50">
             <Navbar />
 
-            {/* HEADER */}
             <div className="bg-gradient-to-r from-slate-900 via-slate-800 to-orange-900 text-white">
                 <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
                     <h1 className="text-2xl font-bold tracking-tight sm:text-3xl lg:text-4xl">
@@ -55,9 +68,7 @@ export default function ScholarshipsPage() {
                 </div>
             </div>
 
-            {/* MAIN */}
             <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-                {/* TOP BAR */}
                 <div className="mb-6 flex flex-col gap-3 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm text-gray-600 sm:text-base">
                         <span className="font-semibold text-gray-900">{scholarships.length}</span>{" "}
@@ -65,21 +76,30 @@ export default function ScholarshipsPage() {
                     </p>
                 </div>
 
-                {/* LOADING STATE */}
+                {isFiltered && !loading && (
+                    <div className="mb-6 rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-900">
+                        {t("scholarships.filtered_by", {
+                            region: regionLabel,
+                            degree: degreeLabel,
+                        })}{" "}
+                        <Link href="/settings" className="font-semibold underline hover:text-orange-700">
+                            {t("scholarships.change_in_settings")}
+                        </Link>
+                    </div>
+                )}
+
                 {loading && (
                     <div className="flex items-center justify-center py-16">
                         <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-orange-500" />
                     </div>
                 )}
 
-                {/* ERROR STATE */}
                 {error && !loading && (
                     <div className="rounded-2xl border border-red-200 bg-red-50 p-4 text-center text-sm text-red-700">
                         {error}
                     </div>
                 )}
 
-                {/* CARDS */}
                 {!loading && scholarships.length > 0 && visibleScholarships.length > 0 ? (
                     <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                         {visibleScholarships.map((item, i) => (
@@ -127,11 +147,22 @@ export default function ScholarshipsPage() {
                     </div>
                 ) : !loading && scholarships.length === 0 ? (
                     <div className="rounded-2xl border border-dashed border-gray-300 bg-white py-16 text-center">
-                        <p className="text-sm text-gray-500">No scholarships found.</p>
+                        <p className="text-sm text-gray-500">
+                            {isFiltered
+                                ? t("scholarships.no_matches_preference")
+                                : t("scholarships.empty")}
+                        </p>
+                        {isFiltered && (
+                            <Link
+                                href="/settings"
+                                className="mt-3 inline-block text-sm font-medium text-orange-600 hover:text-orange-700"
+                            >
+                                {t("scholarships.change_in_settings")}
+                            </Link>
+                        )}
                     </div>
                 ) : null}
 
-                {/* LOAD MORE */}
                 {!loading && visible < scholarships.length && (
                     <div className="mt-10 flex justify-center">
                         <button

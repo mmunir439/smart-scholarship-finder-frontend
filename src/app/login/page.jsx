@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import api from "../utils/axios";
 import { setToken, setUser } from "../utils/token";
+import { useAccessibility } from "@/context/AccessibilityContext";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
 import toast from "react-hot-toast";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
@@ -18,6 +20,8 @@ import { FiVolume2 } from "react-icons/fi";
 export default function Login() {
   const { t } = useTranslation();
   const router = useRouter();
+  const { loadFromServer: loadAccessibility } = useAccessibility();
+  const { loadFromServer: loadScholarshipPrefs } = useScholarshipPreferences();
 
   const [loginError, setLoginError] = useState("");
   const [form, setForm] = useState({
@@ -66,6 +70,8 @@ export default function Login() {
 
       setToken(token);
       setUser(user);
+
+      await Promise.all([loadAccessibility(), loadScholarshipPrefs()]);
 
       toast.success(t("login.success"));
       router.replace(user.role === "admin" ? "/admin/dashboard" : "/dashboard");

@@ -1,11 +1,19 @@
 "use client";
 
 import React, { useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { useTranslation } from "react-i18next";
 import AcademicProfileCard from "@/components/Profile";
 import axios from "@/app/utils/axios";
 import { speak } from "../utils/voiceAssistant";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
+import {
+    fetchEligibleScholarships,
+    getDegreeFilterLabel,
+    getRegionFilterLabel,
+    isScholarshipFilterActive,
+} from "@/lib/scholarshipPreferences";
 
 import {
     FiCalendar,
@@ -19,6 +27,7 @@ import {
 
 export default function Page() {
     const { t } = useTranslation();
+    const { preferences, loaded: prefsLoaded } = useScholarshipPreferences();
 
     const [user, setUser] = useState({});
     const [profile, setProfile] = useState(null);
@@ -64,14 +73,10 @@ export default function Page() {
             setLoading(true);
             setError("");
 
-            const res = await axios.get("/eligible");
-
-            const list = Array.isArray(res.data)
-                ? res.data
-                : (res.data?.results ?? res.data?.data ?? []);
+            const list = await fetchEligibleScholarships(preferences);
 
             setEligibleData(list);
-            setTtsText(res.data?.ttsText || "");
+            setTtsText("");
         } catch (error) {
             console.log(error);
             setEligibleData([]);
@@ -84,10 +89,22 @@ export default function Page() {
     useEffect(() => {
         getUser();
         getProfile();
-        getEligible();
     }, []);
 
+    useEffect(() => {
+        if (!prefsLoaded) return;
+        getEligible();
+    }, [preferences.studyRegion, preferences.preferredDegree, prefsLoaded]);
+
+    const isFiltered = isScholarshipFilterActive(preferences);
+    const regionLabel = getRegionFilterLabel(preferences.studyRegion, t);
+    const degreeLabel = getDegreeFilterLabel(preferences.preferredDegree, t);
+
     const safeEligibleData = Array.isArray(eligibleData) ? eligibleData : [];
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [preferences.studyRegion, preferences.preferredDegree]);
 
     const totalScholarships = safeEligibleData.length;
     const activeScholarships = safeEligibleData.filter((item) =>
@@ -227,6 +244,18 @@ export default function Page() {
                             </div>
                         </div>
                     </div>
+
+                    {isFiltered && !loading && (
+                        <div className="rounded-xl border border-orange-200 bg-orange-50 px-4 py-3 text-sm text-orange-900">
+                            {t("scholarships.filtered_by", {
+                                region: regionLabel,
+                                degree: degreeLabel,
+                            })}{" "}
+                            <Link href="/settings" className="font-semibold underline hover:text-orange-700">
+                                {t("scholarships.change_in_settings")}
+                            </Link>
+                        </div>
+                    )}
 
                     {error && (
                         <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-red-700 text-sm">

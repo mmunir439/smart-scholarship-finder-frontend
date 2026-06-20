@@ -4,6 +4,10 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import axios from "@/app/utils/axios";
+import { removeToken } from "@/app/utils/token";
+import { useAccessibility } from "@/context/AccessibilityContext";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
+import { stopSpeaking } from "@/app/utils/voiceAssistant";
 import { Menu, X, LogOut, UserCircle2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
@@ -12,6 +16,8 @@ export default function Sidebar({ children }) {
     const { t } = useTranslation();
     const path = usePathname();
     const router = useRouter();
+    const { resetGuestDefaults: resetAccessibility } = useAccessibility();
+    const { resetGuestDefaults: resetScholarshipPrefs } = useScholarshipPreferences();
 
     const navItems = [
         { name: t("sidebar.dashboard"), href: "/dashboard" },
@@ -23,9 +29,11 @@ export default function Sidebar({ children }) {
     const [open, setOpen] = useState(false);
 
     const handleLogout = () => {
-        localStorage.removeItem("token");
+        removeToken();
         localStorage.removeItem("user");
-        sessionStorage.clear();
+        stopSpeaking();
+        resetAccessibility();
+        resetScholarshipPrefs();
         setOpen(false);
         router.replace("/login");
     };

@@ -4,6 +4,7 @@ import { jwtDecode } from "jwt-decode";
 export function setToken(token) {
   if (typeof window !== "undefined") {
     sessionStorage.setItem("token", token);
+    localStorage.setItem("token", token);
     document.cookie = `token=${encodeURIComponent(token)}; path=/; max-age=${60 * 60 * 24}; SameSite=Lax`;
     setAxiosAuthToken(token);
   }
@@ -13,6 +14,8 @@ export function removeToken() {
   if (typeof window !== "undefined") {
     sessionStorage.removeItem("token");
     sessionStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     document.cookie = "token=; path=/; max-age=0";
     setAxiosAuthToken(null);
   }
@@ -20,7 +23,7 @@ export function removeToken() {
 
 export function getToken() {
   if (typeof window !== "undefined") {
-    return sessionStorage.getItem("token");
+    return sessionStorage.getItem("token") || localStorage.getItem("token");
   }
   return null;
 }

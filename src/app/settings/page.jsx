@@ -5,10 +5,15 @@ import Link from "next/link";
 import axios from "@/app/utils/axios";
 import toast from "react-hot-toast";
 import { validatePasswordChange } from "@/lib/validatePassword";
+import {
+    parseNotificationsFromSettings,
+    updateNotificationSettings,
+} from "@/lib/notificationsApi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import i18n from "@/i18n";
-import { normalizeLang } from "@/lib/i18nLang";
+import { useAccessibility } from "@/context/AccessibilityContext";
+import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
+import { BACKEND_LANGUAGES } from "@/lib/accessibilityLang";
 import { useTranslation } from "react-i18next";
 import {
     FiUser,
@@ -23,28 +28,15 @@ import {
     FiTarget,
 } from "react-icons/fi";
 
-const PREFERENCES_KEY = "scholarshipPreferences";
-
-const defaultPreferences = {
-    studyRegion: "both",
-    preferredDegree: "all",
-};
-
-function readPreferences() {
-    try {
-        const stored = localStorage.getItem(PREFERENCES_KEY);
-        return stored ? { ...defaultPreferences, ...JSON.parse(stored) } : defaultPreferences;
-    } catch {
-        return defaultPreferences;
-    }
-}
+const inputClass =
+    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100";
 
 async function fetchSettingsData() {
     let data = {};
 
     try {
         const res = await axios.get("/user/settings");
-        data = res?.data?.data ?? res?.data ?? {};
+        data = res?.data ?? {};
     } catch {
         try {
             const userRes = await axios.get("/user/getCurrentUser");
@@ -61,22 +53,13 @@ async function fetchSettingsData() {
         data = {};
     }
 
-    const prefs = readPreferences();
+    const notifications = parseNotificationsFromSettings(data);
 
     return {
         profile: {
-            name: String(data?.name ?? ""),
+            name: String(data?.data?.name ?? data?.name ?? ""),
         },
-        accessibility: {
-            language: normalizeLang(data?.language ?? localStorage.getItem("lang") ?? "en"),
-            textToSpeech: data?.textToSpeech ?? localStorage.getItem("textToSpeech") !== "false",
-        },
-        notifications: {
-            emailNotifications: data?.emailNotifications ?? true,
-            eligibilityAlerts: data?.eligibilityAlerts ?? true,
-            deadlineReminders: data?.deadlineReminders ?? prefs.deadlineReminders ?? true,
-        },
-        preferences: prefs,
+        notifications,
     };
 }
 
@@ -97,21 +80,16 @@ function SectionCard({ icon: Icon, title, description, children }) {
     );
 }
 
-const inputClass =
-    "w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-2 focus:ring-orange-100";
-
-function applyAccessibilityPrefs(data, applyLanguage = false) {
-    localStorage.setItem("textToSpeech", String(data.textToSpeech));
-    if (applyLanguage) {
-        const lang = normalizeLang(data.language);
-        if (normalizeLang(i18n.language) !== lang) {
-            i18n.changeLanguage(lang);
-        }
-    }
-}
-
 export default function SettingsPage() {
     const { t } = useTranslation();
+    const { accessibility, updateAndSync, syncing: accessibilitySyncing, loaded: accessibilityLoaded } =
+        useAccessibility();
+    const {
+        preferences,
+        setPreferences,
+        saveGuidance,
+        syncing: preferencesSyncing,
+    } = useScholarshipPreferences();
 
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -127,13 +105,6 @@ export default function SettingsPage() {
         newPassword: "",
         confirmPassword: "",
     });
-
-    const [accessibility, setAccessibility] = useState({
-        language: "en",
-        textToSpeech: true,
-    });
-
-    const [preferences, setPreferences] = useState(defaultPreferences);
 
     const [notifications, setNotifications] = useState({
         emailNotifications: true,
@@ -155,15 +126,11 @@ export default function SettingsPage() {
                 if (cancelled) return;
 
                 setProfile(result.profile);
-                setAccessibility(result.accessibility);
-                applyAccessibilityPrefs(result.accessibility, false);
                 setNotifications(result.notifications);
-                setPreferences(result.preferences);
             })
             .catch(() => {
                 if (!cancelled) {
                     setError("Failed to load settings");
-                    setPreferences(readPreferences());
                 }
             })
             .finally(() => {
@@ -222,40 +189,65 @@ export default function SettingsPage() {
         }
     };
 
-    const handleAccessibilitySave = async () => {
+    const handleAccessibilityLanguageChange = async (language) => {
+        setMessage("");
+        setError("");
+        try {
+            await updateAndSync({
+                language,
+                textToSpeech: accessibility.textToSpeech,
+            });
+            setMessage(t("settingsPage.accessibility_success"));
+            toast.success(t("settingsPage.accessibility_success"));
+        } catch (err) {
+            const errMsg = err?.response?.data?.message || t("settingsPage.accessibility_error");
+            setError(errMsg);
+            toast.error(errMsg);
+        }
+    };
+
+    const handleAccessibilityTTSChange = async (textToSpeech) => {
+        setMessage("");
+        setError("");
+        try {
+            await updateAndSync({
+                language: accessibility.language,
+                textToSpeech,
+            });
+            setMessage(t("settingsPage.accessibility_success"));
+            toast.success(t("settingsPage.accessibility_success"));
+        } catch (err) {
+            const errMsg = err?.response?.data?.message || t("settingsPage.accessibility_error");
+            setError(errMsg);
+            toast.error(errMsg);
+        }
+    };
+
+    const handlePreferencesSave = async () => {
         try {
             setSaving(true);
             setMessage("");
             setError("");
 
-            const res = await axios.put("/user/settings/accessibility", accessibility);
-            applyAccessibilityPrefs(accessibility, true);
-            setMessage(res?.data?.message || t("settingsPage.accessibility_success"));
+            await saveGuidance(preferences);
+            setMessage(t("settingsPage.preferences_success"));
+            toast.success(t("settingsPage.preferences_success"));
         } catch (err) {
-            applyAccessibilityPrefs(accessibility, true);
-            setError(err?.response?.data?.message || t("settingsPage.accessibility_error"));
+            const errMsg =
+                err?.response?.data?.message || "Failed to save scholarship preferences";
+            setError(errMsg);
+            toast.error(errMsg);
         } finally {
             setSaving(false);
         }
     };
 
-    const handlePreferencesSave = () => {
-        try {
-            setSaving(true);
-            setMessage("");
-            setError("");
+    const handleStudyRegionChange = (studyRegion) => {
+        setPreferences((prev) => ({ ...prev, studyRegion }));
+    };
 
-            localStorage.setItem(
-                PREFERENCES_KEY,
-                JSON.stringify({
-                    ...preferences,
-                    deadlineReminders: notifications.deadlineReminders,
-                }),
-            );
-            setMessage(t("settingsPage.preferences_success"));
-        } finally {
-            setSaving(false);
-        }
+    const handlePreferredDegreeChange = (preferredDegree) => {
+        setPreferences((prev) => ({ ...prev, preferredDegree }));
     };
 
     const handleNotificationSave = async () => {
@@ -264,24 +256,15 @@ export default function SettingsPage() {
             setMessage("");
             setError("");
 
-            const res = await axios.put("/user/settings/notifications", notifications);
-            localStorage.setItem(
-                PREFERENCES_KEY,
-                JSON.stringify({
-                    ...preferences,
-                    deadlineReminders: notifications.deadlineReminders,
-                }),
-            );
-            setMessage(res?.data?.message || t("settingsPage.notifications_success"));
+            const res = await updateNotificationSettings(notifications);
+            const successMsg = res?.message || t("settingsPage.notifications_success");
+            setMessage(successMsg);
+            toast.success(successMsg);
         } catch (err) {
-            localStorage.setItem(
-                PREFERENCES_KEY,
-                JSON.stringify({
-                    ...preferences,
-                    deadlineReminders: notifications.deadlineReminders,
-                }),
-            );
-            setError(err?.response?.data?.message || t("settingsPage.notifications_error"));
+            const errMsg =
+                err?.response?.data?.message || t("settingsPage.notifications_error");
+            setError(errMsg);
+            toast.error(errMsg);
         } finally {
             setSaving(false);
         }
@@ -299,7 +282,6 @@ export default function SettingsPage() {
             setMessage(res?.data?.message || t("settingsPage.delete_success"));
             localStorage.removeItem("token");
             localStorage.removeItem("user");
-            localStorage.removeItem(PREFERENCES_KEY);
             localStorage.removeItem("textToSpeech");
             window.location.href = "/login";
         } catch (err) {
@@ -476,16 +458,16 @@ export default function SettingsPage() {
                                     <select
                                         className={inputClass}
                                         value={accessibility.language}
+                                        disabled={loading || accessibilitySyncing || !accessibilityLoaded}
                                         onChange={(e) =>
-                                            setAccessibility((prev) => ({
-                                                ...prev,
-                                                language: e.target.value,
-                                            }))
+                                            handleAccessibilityLanguageChange(e.target.value)
                                         }
                                     >
-                                        <option value="en">{t("settingsPage.lang_en")}</option>
-                                        <option value="ur">{t("settingsPage.lang_ur")}</option>
-                                        <option value="so">{t("settingsPage.lang_so")}</option>
+                                        {BACKEND_LANGUAGES.map(({ value, label }) => (
+                                            <option key={value} value={value}>
+                                                {label}
+                                            </option>
+                                        ))}
                                     </select>
                                 </div>
 
@@ -493,25 +475,20 @@ export default function SettingsPage() {
                                     <input
                                         type="checkbox"
                                         checked={accessibility.textToSpeech}
+                                        disabled={loading || accessibilitySyncing || !accessibilityLoaded}
                                         onChange={(e) =>
-                                            setAccessibility((prev) => ({
-                                                ...prev,
-                                                textToSpeech: e.target.checked,
-                                            }))
+                                            handleAccessibilityTTSChange(e.target.checked)
                                         }
                                         className="h-4 w-4 rounded border-gray-300"
                                     />
                                     {t("settingsPage.tts")}
                                 </label>
 
-                                <button
-                                    onClick={handleAccessibilitySave}
-                                    disabled={saving || loading}
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
-                                >
-                                    <FiSave size={16} />
-                                    {t("settingsPage.save_accessibility")}
-                                </button>
+                                {accessibilitySyncing && (
+                                    <p className="text-xs text-gray-500">
+                                        {t("settingsPage.accessibility_saving")}
+                                    </p>
+                                )}
                             </div>
                         </SectionCard>
 
@@ -528,16 +505,11 @@ export default function SettingsPage() {
                                     <select
                                         className={inputClass}
                                         value={preferences.studyRegion}
-                                        onChange={(e) =>
-                                            setPreferences((prev) => ({
-                                                ...prev,
-                                                studyRegion: e.target.value,
-                                            }))
-                                        }
+                                        onChange={(e) => handleStudyRegionChange(e.target.value)}
                                     >
-                                        <option value="both">{t("settingsPage.region_both")}</option>
-                                        <option value="usa">{t("settingsPage.region_usa")}</option>
-                                        <option value="europe">{t("settingsPage.region_europe")}</option>
+                                        <option value="USA & Europe">{t("settingsPage.region_both")}</option>
+                                        <option value="USA only">{t("settingsPage.region_usa")}</option>
+                                        <option value="Europe only">{t("settingsPage.region_europe")}</option>
                                     </select>
                                 </div>
 
@@ -548,17 +520,12 @@ export default function SettingsPage() {
                                     <select
                                         className={inputClass}
                                         value={preferences.preferredDegree}
-                                        onChange={(e) =>
-                                            setPreferences((prev) => ({
-                                                ...prev,
-                                                preferredDegree: e.target.value,
-                                            }))
-                                        }
+                                        onChange={(e) => handlePreferredDegreeChange(e.target.value)}
                                     >
-                                        <option value="all">{t("settingsPage.degree_all")}</option>
-                                        <option value="bachelor">{t("settingsPage.degree_bachelor")}</option>
-                                        <option value="master">{t("settingsPage.degree_master")}</option>
-                                        <option value="phd">{t("settingsPage.degree_phd")}</option>
+                                        <option value="All">{t("settingsPage.degree_all")}</option>
+                                        <option value="Bachelor">{t("settingsPage.degree_bachelor")}</option>
+                                        <option value="Master">{t("settingsPage.degree_master")}</option>
+                                        <option value="PhD">{t("settingsPage.degree_phd")}</option>
                                     </select>
                                 </div>
 
@@ -572,7 +539,7 @@ export default function SettingsPage() {
 
                                 <button
                                     onClick={handlePreferencesSave}
-                                    disabled={saving || loading}
+                                    disabled={saving || loading || preferencesSyncing}
                                     className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
                                 >
                                     <FiSave size={16} />

@@ -1,4 +1,4 @@
-/** Supported app language codes */
+/** Supported app language codes (synced with backend accessibility) */
 export const LANGUAGES = [
   { code: "en", label: "English" },
   { code: "ur", label: "اردو" },
