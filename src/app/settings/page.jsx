@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "@/app/utils/axios";
+import toast from "react-hot-toast";
+import { validatePasswordChange } from "@/lib/validatePassword";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import i18n from "@/i18n";
@@ -49,7 +51,6 @@ async function fetchSettingsData() {
             const user = userRes?.data?.user ?? userRes?.data ?? {};
             data = {
                 name: user?.name ?? "",
-                profilePicture: user?.profilePicture ?? "",
             };
         } catch {
             data = {};
@@ -65,7 +66,6 @@ async function fetchSettingsData() {
     return {
         profile: {
             name: String(data?.name ?? ""),
-            profilePicture: String(data?.profilePicture ?? ""),
         },
         accessibility: {
             language: normalizeLang(data?.language ?? localStorage.getItem("lang") ?? "en"),
@@ -120,7 +120,6 @@ export default function SettingsPage() {
 
     const [profile, setProfile] = useState({
         name: "",
-        profilePicture: "",
     });
 
     const [password, setPassword] = useState({
@@ -143,6 +142,10 @@ export default function SettingsPage() {
     });
 
     const [showPassword, setShowPassword] = useState(false);
+
+    const passwordsMatch =
+        password.newPassword === password.confirmPassword &&
+        password.confirmPassword.length > 0;
 
     useEffect(() => {
         let cancelled = false;
@@ -188,16 +191,32 @@ export default function SettingsPage() {
     };
 
     const handlePasswordSave = async () => {
+        setMessage("");
+        setError("");
+
+        const validationError = validatePasswordChange({ ...password, t });
+        if (validationError) {
+            setError(validationError);
+            toast.error(validationError);
+            return;
+        }
+
         try {
             setSaving(true);
-            setMessage("");
-            setError("");
 
-            const res = await axios.put("/user/settings/change-password", password);
-            setMessage(res?.data?.message || t("settingsPage.password_success"));
+            const res = await axios.put("/user/settings/change-password", {
+                oldPassword: password.oldPassword,
+                newPassword: password.newPassword,
+                confirmPassword: password.confirmPassword,
+            });
+            const successMsg = res?.data?.message || t("settingsPage.password_success");
+            setMessage(successMsg);
+            toast.success(successMsg);
             setPassword({ oldPassword: "", newPassword: "", confirmPassword: "" });
         } catch (err) {
-            setError(err?.response?.data?.message || t("settingsPage.password_error"));
+            const errMsg = err?.response?.data?.message || t("settingsPage.password_error");
+            setError(errMsg);
+            toast.error(errMsg);
         } finally {
             setSaving(false);
         }
@@ -336,23 +355,6 @@ export default function SettingsPage() {
                                     />
                                 </div>
 
-                                <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                                        {t("settingsPage.picture_url")}
-                                    </label>
-                                    <input
-                                        className={inputClass}
-                                        value={profile.profilePicture}
-                                        onChange={(e) =>
-                                            setProfile((prev) => ({
-                                                ...prev,
-                                                profilePicture: e.target.value,
-                                            }))
-                                        }
-                                        placeholder={t("settingsPage.picture_placeholder")}
-                                    />
-                                </div>
-
                                 <button
                                     onClick={handleProfileSave}
                                     disabled={saving || loading}
@@ -421,16 +423,34 @@ export default function SettingsPage() {
                                     />
                                 </div>
 
-                                <button
-                                    type="button"
-                                    onClick={() => setShowPassword((prev) => !prev)}
-                                    className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
-                                >
-                                    {showPassword ? <FiEyeOff /> : <FiEye />}
-                                    {showPassword
-                                        ? t("settingsPage.hide_passwords")
-                                        : t("settingsPage.show_passwords")}
-                                </button>
+                                {password.confirmPassword && (
+                                    <p
+                                        className={`text-xs ${passwordsMatch ? "text-green-600" : "text-red-500"}`}
+                                    >
+                                        {passwordsMatch
+                                            ? t("register.passwords_match")
+                                            : t("register.passwords_mismatch")}
+                                    </p>
+                                )}
+
+                                <div className="flex items-center justify-between gap-3">
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowPassword((prev) => !prev)}
+                                        className="inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900"
+                                    >
+                                        {showPassword ? <FiEyeOff /> : <FiEye />}
+                                        {showPassword
+                                            ? t("settingsPage.hide_passwords")
+                                            : t("settingsPage.show_passwords")}
+                                    </button>
+                                    <Link
+                                        href="/forgot-password"
+                                        className="text-sm font-medium text-orange-500 hover:text-orange-600"
+                                    >
+                                        {t("login.forgot_password")}
+                                    </Link>
+                                </div>
 
                                 <button
                                     onClick={handlePasswordSave}
