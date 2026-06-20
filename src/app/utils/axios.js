@@ -1,7 +1,7 @@
 import axios from "axios";
 import { getToken } from "./token";
 const instance = axios.create({
-  baseURL: "http://localhost:3000/", // Ensure NEXT_PUBLIC_ prefix is used
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000",
 });
 
 instance.interceptors.request.use(
