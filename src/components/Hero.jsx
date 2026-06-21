@@ -1,98 +1,85 @@
-"use client";
-
-import Link from "next/link";
-import { useTranslation } from "react-i18next";
-import Image from "next/image";
-import GetStartedLink from "@/components/GetStartedLink";
-export default function Hero() {
-    const { t } = useTranslation();
-
-    return (
-        <section className="relative overflow-hidden bg-[#07162d] text-white px-4 sm:px-6 lg:px-10 py-12 sm:py-20">
-            <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(249,115,22,0.2),transparent_45%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.12),transparent_40%)]" />
-            <div className="relative mx-auto max-w-7xl grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
-
-                {/* LEFT - Text Content */}
-                <div className="order-2 md:order-1">
-                    <div className="edu-badge mb-4 text-orange-300 border-orange-400/50">
-                        ✨ {t("hero.badge")}
-                    </div>
-
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold leading-tight mb-4">
-                        {t("hero.title")}
-                        <span className="text-orange-500 block">{t("hero.highlight")}</span>
-                    </h1>
-
-                    <p className="text-gray-300 mb-6 text-sm sm:text-base">
-                        {t("hero.desc")}
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
-                        <GetStartedLink
-                            className="inline-flex items-center justify-center w-full sm:w-auto bg-orange-500 hover:bg-orange-600 px-5 py-3 rounded-md font-semibold text-sm transition-colors"
-                        >
-                            {t("hero.start")} →
-                        </GetStartedLink>
-
-                        <Link
-                            href="/scholarships"
-                            className="inline-flex items-center justify-center w-full sm:w-auto border border-gray-500 px-5 py-3 rounded-md hover:border-white text-sm transition-colors"
-                        >
-                            {t("hero.browse")}
-                        </Link>
-                    </div>
-
-                    <div className="flex items-center gap-3 text-sm text-gray-400">
-                        <span className="text-yellow-400">★★★★★</span>
-                        <span>{t("hero.trust")}</span>
-                    </div>
-
-                    {/* Stats Row */}
-                    <div className="mt-10 grid grid-cols-3 gap-4 border-t border-white/10 pt-6">
-                        <div>
-                            <div className="text-2xl font-bold text-orange-500">500+</div>
-                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_scholarships")}</div>
-                        </div>
-                        <div>
-                            <div className="text-2xl font-bold text-orange-500">10K+</div>
-                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_students")}</div>
-                        </div>
-                        <div>
-                            <div className="text-2xl font-bold text-orange-500">50+</div>
-                            <div className="text-xs text-gray-400 mt-1">{t("hero.stat_countries")}</div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* RIGHT - Clean Student Image Only */}
-                <div className="order-1 md:order-2 flex justify-center md:justify-end">
-                    <div className="relative w-full max-w-lg">
-
-                        {/* Decorative glow behind image */}
-                        <div className="absolute -inset-2 bg-orange-500 opacity-10 blur-2xl rounded-3xl" />
-
-                        {/* Main Student Image */}
-                        <Image
-                            src="/munir.jpeg"        // ✅ just /filename.png — no /public/ in the path
-                            alt="Student with scholarship"
-                            width={800}
-                            height={480}
-                            className="relative w-full h-[420px] sm:h-[480px] object-cover object-top rounded-2xl shadow-2xl"
-                            priority                // ✅ loads image immediately (good for hero)
-                        />
-
-                        {/* Subtle gradient at bottom for polish */}
-                        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0b1d3a] to-transparent rounded-b-2xl" />
-
-                        {/* Small floating badge - minimal, not a card */}
-                        <div className="absolute top-4 right-4 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white shadow-lg">
-                            🎓 {t("hero.ai_badge")}
-                        </div>
-
-                    </div>
-                </div>
-
-            </div>
-        </section>
-    );
-}
+"use client";
+
+import Link from "next/link";
+import { useTranslation } from "react-i18next";
+import Image from "next/image";
+import GetStartedLink from "@/components/GetStartedLink";
+import { ArrowRight, BookOpen, Globe, Users } from "lucide-react";
+
+export default function Hero() {
+  const { t } = useTranslation();
+
+  const stats = [
+    { icon: BookOpen, value: "500+", label: t("hero.stat_scholarships") },
+    { icon: Users, value: "10K+", label: t("hero.stat_students") },
+    { icon: Globe, value: "50+", label: t("hero.stat_countries") },
+  ];
+
+  return (
+    <section className="border-b border-slate-200 bg-white">
+      <div className="edu-container grid grid-cols-1 items-center gap-10 py-14 md:grid-cols-2 md:py-20 lg:gap-16">
+        {/* Text — dark on white for maximum readability */}
+        <div>
+          <span className="edu-badge mb-5">{t("hero.badge")}</span>
+
+          <h1 className="text-4xl font-extrabold leading-tight text-slate-900 sm:text-5xl lg:text-[3.25rem]">
+            {t("hero.title")}{" "}
+            <span className="text-blue-600">{t("hero.highlight")}</span>
+          </h1>
+
+          <p className="mt-5 max-w-lg text-lg leading-relaxed text-slate-600">
+            {t("hero.desc")}
+          </p>
+
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+            <GetStartedLink className="btn-primary px-6 py-3 text-base">
+              {t("hero.start")}
+              <ArrowRight size={18} />
+            </GetStartedLink>
+            <Link href="/scholarships" className="btn-outline px-6 py-3 text-base">
+              {t("hero.browse")}
+            </Link>
+          </div>
+
+          <p className="mt-6 text-sm text-slate-500">★★★★★ {t("hero.trust")}</p>
+        </div>
+
+        {/* Image */}
+        <div className="relative flex justify-center md:justify-end">
+          <div className="relative w-full max-w-md lg:max-w-lg">
+            <div className="overflow-hidden rounded-2xl border border-slate-200 shadow-[var(--shadow-lg)]">
+              <Image
+                src="/munir.jpeg"
+                alt="Student with scholarship"
+                width={800}
+                height={480}
+                className="h-[340px] w-full object-cover object-top sm:h-[420px]"
+                priority
+              />
+            </div>
+            <div className="absolute -bottom-4 left-4 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-lg">
+              🎓 {t("hero.ai_badge")}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stats bar */}
+      <div className="border-t border-slate-200 bg-slate-50">
+        <div className="edu-container grid grid-cols-1 gap-6 py-8 sm:grid-cols-3">
+          {stats.map(({ icon: Icon, value, label }) => (
+            <div key={label} className="flex items-center gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 text-blue-600">
+                <Icon size={22} />
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-slate-900">{value}</div>
+                <div className="text-sm text-slate-600">{label}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

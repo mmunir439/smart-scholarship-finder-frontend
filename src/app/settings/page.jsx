@@ -340,7 +340,7 @@ export default function SettingsPage() {
                                 <button
                                     onClick={handleProfileSave}
                                     disabled={saving || loading}
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
+                                    className="btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-60"
                                 >
                                     <FiSave size={16} />
                                     {t("settingsPage.save_profile")}
@@ -437,7 +437,7 @@ export default function SettingsPage() {
                                 <button
                                     onClick={handlePasswordSave}
                                     disabled={saving || loading}
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
+                                    className="btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-60"
                                 >
                                     <FiSave size={16} />
                                     {t("settingsPage.change_password")}
@@ -540,7 +540,7 @@ export default function SettingsPage() {
                                 <button
                                     onClick={handlePreferencesSave}
                                     disabled={saving || loading || preferencesSyncing}
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
+                                    className="btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-60"
                                 >
                                     <FiSave size={16} />
                                     {t("settingsPage.save_preferences")}
@@ -602,7 +602,7 @@ export default function SettingsPage() {
                                 <button
                                     onClick={handleNotificationSave}
                                     disabled={saving || loading}
-                                    className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-500 px-4 py-3 text-white text-sm font-medium hover:bg-orange-600 disabled:opacity-60"
+                                    className="btn-primary inline-flex items-center justify-center gap-2 disabled:opacity-60"
                                 >
                                     <FiSave size={16} />
                                     {t("settingsPage.save_notifications")}

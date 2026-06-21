@@ -112,10 +112,8 @@ export default function Register() {
             <AuthHeroPanel className="lg:hidden">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="mb-3 inline-flex rounded-full bg-white/15 px-4 py-1 text-xs font-medium backdrop-blur">
-                    {t("register.title")}
-                  </p>
-                  <h1 className="text-2xl font-bold leading-tight sm:text-3xl">
+              <span className="edu-badge-dark mb-3">{t("register.title")}</span>
+                  <h1 className="text-2xl font-bold text-white sm:text-3xl">
                     {t("register.create_title")}
                   </h1>
                 </div>
@@ -131,7 +129,7 @@ export default function Register() {
                 </button>
               </div>
 
-              <p className="mt-3 text-sm text-orange-100 sm:text-base">
+              <p className="mt-3 text-sm text-blue-100 sm:text-base">
                 {t("register.create_desc")}
               </p>
             </AuthHeroPanel>
@@ -145,7 +143,7 @@ export default function Register() {
                   <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
                     {t("register.create_title")}
                   </h1>
-                  <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
+                  <p className="mt-4 max-w-md text-base text-blue-100 xl:text-lg">
                     {t("register.create_desc")}
                   </p>
                 </div>
@@ -161,7 +159,7 @@ export default function Register() {
                 </button>
               </div>
 
-              <div className="mt-10 space-y-3 text-sm text-orange-100">
+              <div className="mt-10 space-y-3 text-sm text-blue-100">
                 <div className="flex items-center gap-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-white" />
                   {t("register.feature1")}

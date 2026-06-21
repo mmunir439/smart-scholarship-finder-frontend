@@ -1,7 +1,8 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { Menu, X, User, LogOut, Settings, Grid } from "lucide-react";
+import { Menu, X, User, LogOut, Settings, Grid, GraduationCap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import axios from "@/app/utils/axios";
@@ -17,15 +18,12 @@ export default function Navbar() {
   const { resetGuestDefaults: resetAccessibility } = useAccessibility();
   const { resetGuestDefaults: resetScholarshipPrefs } = useScholarshipPreferences();
 
-  const [open, setOpen] = useState(false); // mobile menu
-  const [menuOpen, setMenuOpen] = useState(false); // profile dropdown
+  const [open, setOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
-
   const menuRef = useRef();
-  const mobileRef = useRef();
 
-  // load user (attempt API then localStorage)
   useEffect(() => {
     let mounted = true;
     const fetchUser = async () => {
@@ -34,7 +32,7 @@ export default function Navbar() {
         if (!mounted) return;
         setUser(res.data || null);
         if (res.data) localStorage.setItem("user", JSON.stringify(res.data));
-      } catch (err) {
+      } catch {
         try {
           const stored = localStorage.getItem("user");
           if (stored && mounted) setUser(JSON.parse(stored));
@@ -46,37 +44,19 @@ export default function Navbar() {
       }
     };
     fetchUser();
-    return () => {
-      mounted = false;
-    };
+    return () => { mounted = false; };
   }, []);
 
-  // click outside to close dropdowns
   useEffect(() => {
     const handleClick = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) setMenuOpen(false);
-      if (mobileRef.current && !mobileRef.current.contains(e.target)) {
-        /* keep mobile open until close button clicked intentionally */
-      }
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
-  // close mobile menu on route change (router push)
-  useEffect(() => {
-    const handleRouteChange = () => setOpen(false);
-    // Next.js app router doesn't provide events like next/router here; keep simple: close on mount/unmount
-    return () => {
-      handleRouteChange();
-    };
-  }, []);
-
   const handleLogout = () => {
-    try {
-      removeToken();
-      localStorage.removeItem("user");
-    } catch { }
+    try { removeToken(); localStorage.removeItem("user"); } catch {}
     stopSpeaking();
     resetAccessibility();
     resetScholarshipPrefs();
@@ -88,156 +68,119 @@ export default function Navbar() {
   const initials = (name) =>
     !name ? "U" : name.split(" ").map((n) => n[0]).slice(0, 2).join("").toUpperCase();
 
+  const navLinks = [
+    { href: "/", label: t("navbar.home") },
+    { href: "/scholarships", label: t("navbar.scholarships") },
+    { href: "/how-it-works", label: t("navbar.how") },
+    { href: "/about", label: t("footer.about") },
+  ];
+
   return (
     <>
-      <nav className="sticky top-0 z-40 w-full border-b border-gray-200/80 bg-white/95 backdrop-blur-md shadow-sm">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+      <nav className="sticky top-0 z-40 border-b border-slate-200 bg-white shadow-sm">
+        <div className="edu-container">
           <div className="flex h-16 items-center justify-between">
-            <div className="flex items-center gap-4">
-              <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#07162d] text-lg text-white shadow-md">🎓</span>
-                <span className="hidden sm:inline">
-                  <span className="text-[#07162d]">{t("navbar.brand_smart")}</span>
-                  <span className="text-orange-500"> {t("navbar.brand_scholarship")}</span>
+            <div className="flex items-center gap-8">
+              <Link href="/" className="flex items-center gap-2.5">
+                <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-600 text-white">
+                  <GraduationCap size={20} />
+                </span>
+                <span className="hidden text-lg font-bold sm:inline">
+                  <span className="text-slate-900">{t("navbar.brand_smart")}</span>{" "}
+                  <span className="text-blue-600">{t("navbar.brand_scholarship")}</span>
                 </span>
               </Link>
-              <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-                <Link href="/" className="transition hover:text-orange-600">{t("navbar.home")}</Link>
-                <Link href="/scholarships" className="transition hover:text-orange-600">{t("navbar.scholarships")}</Link>
-                <Link href="/how-it-works" className="transition hover:text-orange-600">{t("navbar.how")}</Link>
+
+              <div className="hidden items-center gap-1 md:flex">
+                {navLinks.map((link) => (
+                  <Link key={link.href} href={link.href} className="nav-link rounded-md px-3 py-2 hover:bg-slate-50">
+                    {link.label}
+                  </Link>
+                ))}
               </div>
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Desktop actions */}
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden items-center gap-3 md:flex">
                 <LanguageSwitcher />
 
                 {!loadingUser && user ? (
                   <div className="relative" ref={menuRef}>
                     <button
                       onClick={() => setMenuOpen((v) => !v)}
-                      aria-haspopup="true"
-                      aria-expanded={menuOpen}
-                      className="flex items-center gap-3 rounded-full px-2 py-1 hover:bg-gray-50 focus:outline-none"
+                      className="flex items-center gap-2 rounded-lg py-1 pl-1 pr-2 hover:bg-slate-50"
                     >
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full bg-orange-100 text-sm font-semibold text-orange-700">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-xs font-bold text-white">
                         {initials(user.name)}
                       </div>
-                      <div className="hidden sm:flex flex-col text-left">
-                        <span className="text-sm font-medium text-gray-900 leading-none">{user.name}</span>
-                        <span className="text-xs text-gray-500 leading-none">{user.role}</span>
-                      </div>
-                      <svg className="hidden sm:block h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 10.94l3.71-3.71a.75.75 0 111.06 1.06l-4.24 4.24a.75.75 0 01-1.06 0L5.21 8.27a.75.75 0 01.02-1.06z" clipRule="evenodd" />
-                      </svg>
+                      <span className="hidden text-sm font-medium text-slate-800 sm:block">{user.name}</span>
                     </button>
 
                     {menuOpen && (
-                      <div className="absolute right-0 z-50 mt-2 w-64 overflow-hidden rounded-xl bg-white shadow-lg ring-1 ring-black/5">
-                        <div className="px-4 py-3 border-b">
-                          <div className="flex items-center gap-3">
-                            <div className="h-12 w-12 flex items-center justify-center rounded-full bg-orange-100 text-orange-700 font-semibold text-lg">
-                              {initials(user.name)}
-                            </div>
-                            <div>
-                              <div className="text-sm font-semibold text-gray-900">{user.name}</div>
-                              <div className="text-xs text-gray-500">{user.email}</div>
-                            </div>
-                          </div>
+                      <div className="absolute right-0 z-50 mt-1 w-56 rounded-xl border border-slate-200 bg-white py-1 shadow-[var(--shadow-lg)]">
+                        <div className="border-b border-slate-100 px-4 py-3">
+                          <p className="truncate text-sm font-semibold text-slate-900">{user.name}</p>
+                          <p className="truncate text-xs text-slate-500">{user.email}</p>
                         </div>
-
-                        <div className="flex flex-col px-2 py-2">
-                          <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <User size={16} /> {t("navbar.profile")}
-                          </Link>
-
-                          <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <Grid size={16} /> {t("navbar.dashboard")}
-                          </Link>
-
-                          <Link href="/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 rounded-md px-3 py-2 text-sm text-gray-700 hover:bg-gray-50">
-                            <Settings size={16} /> {t("navbar.settings")}
-                          </Link>
-
-                          <button onClick={handleLogout} className="mt-2 flex items-center gap-2 rounded-md px-3 py-2 text-sm text-red-600 hover:bg-gray-50">
-                            <LogOut size={16} /> {t("navbar.logout")}
-                          </button>
-                        </div>
+                        <Link href="/profile" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+                          <User size={16} /> {t("navbar.profile")}
+                        </Link>
+                        <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+                          <Grid size={16} /> {t("navbar.dashboard")}
+                        </Link>
+                        <Link href="/settings" onClick={() => setMenuOpen(false)} className="flex items-center gap-2 px-4 py-2.5 text-sm text-slate-700 hover:bg-slate-50">
+                          <Settings size={16} /> {t("navbar.settings")}
+                        </Link>
+                        <button onClick={handleLogout} className="flex w-full items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50">
+                          <LogOut size={16} /> {t("navbar.logout")}
+                        </button>
                       </div>
                     )}
                   </div>
                 ) : (
                   <>
-                    <Link href="/login" className="text-sm text-gray-700 hover:text-orange-600">{t("navbar.login")}</Link>
-                    <Link href="/register" className="ml-2 rounded-xl bg-orange-500 px-4 py-2 text-sm font-semibold text-white shadow-md transition hover:bg-orange-600">{t("navbar.register")}</Link>
+                    <Link href="/login" className="nav-link">{t("navbar.login")}</Link>
+                    <Link href="/register" className="btn-primary py-2">{t("navbar.register")}</Link>
                   </>
                 )}
               </div>
 
-              {/* Mobile hamburger */}
-              <div className="md:hidden">
-                <button onClick={() => setOpen(true)} aria-label="Open menu" className="p-2">
-                  <Menu size={22} />
-                </button>
-              </div>
+              <button onClick={() => setOpen(true)} className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden" aria-label="Open menu">
+                <Menu size={22} />
+              </button>
             </div>
           </div>
         </div>
       </nav>
 
-      {/* Mobile slideover */}
-      <div
-        ref={mobileRef}
-        className={`fixed inset-0 z-50 transform bg-white transition-transform duration-300 ${open ? "translate-x-0" : "translate-x-full"}`}
-        aria-hidden={!open}
-      >
-        <div className="flex h-16 items-center justify-between px-4 border-b">
-          <Link href="/" className="flex items-center gap-2 text-lg font-bold">
-            🎓{" "}
-            <span>
-              <span className="text-[#07162d]">{t("navbar.brand_smart")}</span>
-              <span className="text-orange-500"> {t("navbar.brand_scholarship")}</span>
-            </span>
+      {/* Mobile menu */}
+      <div className={`fixed inset-0 z-50 bg-white transition-transform duration-300 md:hidden ${open ? "translate-x-0" : "translate-x-full"}`}>
+        <div className="flex h-16 items-center justify-between border-b border-slate-200 px-4">
+          <Link href="/" className="flex items-center gap-2 font-bold text-slate-900" onClick={() => setOpen(false)}>
+            <GraduationCap className="text-blue-600" size={22} />
+            {t("navbar.brand_smart")}
           </Link>
-          <div className="flex items-center gap-3">
-            <LanguageSwitcher />
-            <button onClick={() => setOpen(false)} aria-label="Close menu" className="p-2">
-              <X size={22} />
-            </button>
-          </div>
+          <button onClick={() => setOpen(false)} className="rounded-lg p-2 hover:bg-slate-100"><X size={22} /></button>
         </div>
-
-        <div className="px-6 py-6 overflow-y-auto">
-          <nav className="flex flex-col gap-4 text-gray-700 font-medium">
-            <Link href="/" onClick={() => setOpen(false)} className="py-2">{t("navbar.home")}</Link>
-            <Link href="/scholarships" onClick={() => setOpen(false)} className="py-2">{t("navbar.scholarships")}</Link>
-            <Link href="/how-it-works" onClick={() => setOpen(false)} className="py-2">{t("navbar.how")}</Link>
-          </nav>
-
-          <div className="mt-6 border-t pt-6">
+        <div className="px-4 py-6">
+          {navLinks.map((link) => (
+            <Link key={link.href} href={link.href} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-3 font-medium text-slate-700 hover:bg-slate-50">
+              {link.label}
+            </Link>
+          ))}
+          <div className="mt-6 border-t border-slate-200 pt-6">
             {!loadingUser && user ? (
               <>
-                <div className="flex items-center gap-3 rounded-md bg-orange-50 p-3">
-                  <div className="h-12 w-12 flex items-center justify-center rounded-full bg-orange-100 text-orange-700 font-semibold">{initials(user.name)}</div>
-                  <div>
-                    <div className="text-sm font-semibold text-gray-900">{user.name}</div>
-                    <div className="text-xs text-gray-500">{user.email}</div>
-                  </div>
-                </div>
-
-                <div className="mt-4 flex flex-col gap-2">
-                  <Link href="/profile" onClick={() => setOpen(false)} className="py-2">{t("navbar.profile")}</Link>
-                  <Link href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"} onClick={() => setOpen(false)} className="py-2">{t("navbar.dashboard")}</Link>
-                  <Link href="/settings" onClick={() => setOpen(false)} className="py-2">{t("navbar.settings")}</Link>
-                  <button onClick={() => { handleLogout(); setOpen(false); }} className="mt-2 text-left text-red-600">{t("navbar.logout")}</button>
-                </div>
+                <p className="mb-3 font-semibold text-slate-900">{user.name}</p>
+                <Link href="/dashboard" onClick={() => setOpen(false)} className="block py-2 text-slate-700">{t("navbar.dashboard")}</Link>
+                <Link href="/settings" onClick={() => setOpen(false)} className="block py-2 text-slate-700">{t("navbar.settings")}</Link>
+                <button onClick={() => { handleLogout(); setOpen(false); }} className="mt-2 text-red-600">{t("navbar.logout")}</button>
               </>
             ) : (
-              <>
-                <Link href="/login" onClick={() => setOpen(false)} className="block py-2">{t("navbar.login")}</Link>
-                <Link href="/register" onClick={() => setOpen(false)} className="mt-4 block w-full rounded-xl bg-orange-500 px-4 py-2 text-center text-white font-semibold shadow-md">{t("navbar.register")}</Link>
-              </>
+              <div className="flex flex-col gap-3">
+                <Link href="/login" onClick={() => setOpen(false)} className="btn-outline text-center">{t("navbar.login")}</Link>
+                <Link href="/register" onClick={() => setOpen(false)} className="btn-primary text-center">{t("navbar.register")}</Link>
+              </div>
             )}
           </div>
         </div>

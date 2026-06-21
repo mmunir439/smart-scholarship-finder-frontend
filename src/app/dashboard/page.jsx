@@ -144,20 +144,17 @@ export default function Page() {
 
     return (
         <DashboardLayout hideNavbar={true}>
-            <div className="w-full min-h-screen bg-gradient-to-b from-slate-50 to-white">
-                <div className="w-full max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6">
+            <div className="w-full min-h-screen page-bg">
+                <div className="edu-container space-y-6 py-6">
                     {/* Hero */}
-                    <div className="rounded-3xl bg-[#07162d] text-white p-6 sm:p-8 shadow-xl overflow-hidden relative">
-                        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,122,0,0.18),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(59,130,246,0.16),transparent_35%)]" />
+                    <div className="page-header relative overflow-hidden rounded-2xl p-6 sm:p-8">
                         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
                             <div className="max-w-2xl">
-                                <p className="text-orange-300 text-sm font-medium">
-                                    {today}
-                                </p>
-                                <h1 className="mt-2 text-2xl sm:text-3xl lg:text-4xl font-bold leading-tight">
+                                <p className="text-sm font-medium text-blue-200">{today}</p>
+                                <h1 className="mt-1 text-2xl font-bold text-white sm:text-3xl lg:text-4xl">
                                     {t("dashboard.welcome", { name: user?.name || "User" })} 👋
                                 </h1>
-                                <p className="mt-3 text-sm sm:text-base text-slate-300">
+                                <p className="mt-2 text-sm text-blue-100 sm:text-base">
                                     {t("dashboard.subtitle")}
                                 </p>
                             </div>
@@ -166,7 +163,7 @@ export default function Page() {
                                 <button
                                     type="button"
                                     onClick={handleRefresh}
-                                    className="inline-flex items-center justify-center gap-2 rounded-2xl bg-white/10 px-4 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10 w-full sm:w-auto"
+                                    className="btn-ghost-light w-full sm:w-auto"
                                 >
                                     <FiRefreshCw />
                                     {t("dashboard.refresh")}
@@ -176,7 +173,7 @@ export default function Page() {
                                     type="button"
                                     onClick={handleSpeakSummary}
                                     disabled={loading}
-                                    className="inline-flex items-center justify-center rounded-2xl bg-white/8 px-3 py-3 text-sm font-medium text-white hover:bg-white/15 transition border border-white/10"
+                                    className="btn-ghost-light px-3"
                                     aria-label="Speak summary"
                                     title={ttsText ? "Read recommendations" : "Read summary"}
                                 >
@@ -188,7 +185,7 @@ export default function Page() {
 
                     {/* Quick stats */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-                        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                        <div className="stat-card">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-sm text-gray-500">{t("dashboard.eligible_scholarships")}</p>
@@ -202,7 +199,7 @@ export default function Page() {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                        <div className="stat-card">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-sm text-gray-500">{t("dashboard.active_scholarships")}</p>
@@ -216,7 +213,7 @@ export default function Page() {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                        <div className="stat-card">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-sm text-gray-500">{t("dashboard.countries")}</p>
@@ -230,7 +227,7 @@ export default function Page() {
                             </div>
                         </div>
 
-                        <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
+                        <div className="stat-card">
                             <div className="flex items-center justify-between gap-3">
                                 <div>
                                     <p className="text-sm text-gray-500">{t("dashboard.profile_status")}</p>
@@ -383,7 +380,7 @@ export default function Page() {
                                                 href={item.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[#07162d] px-4 py-3 text-sm font-medium text-white hover:bg-[#0b2447] transition"
+                                                className="btn-secondary w-full"
                                             >
                                                 {t("dashboard.view_details")} <FiExternalLink />
                                             </a>

@@ -1,15 +1,35 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-navy: #07162d;
-  --color-brand-navy-light: #0b2447;
-  --color-brand-gold: #f5a623;
-  --color-brand-orange: #f97316;
+  --color-primary: #2563eb;
+  --color-primary-dark: #1d4ed8;
+  --color-primary-light: #dbeafe;
+  --color-accent: #0891b2;
+  --color-text: #0f172a;
+  --color-text-body: #334155;
+  --color-text-muted: #64748b;
+  --color-surface: #ffffff;
+  --color-bg: #f8fafc;
+  --color-border: #e2e8f0;
+  --font-sans: var(--font-plus-jakarta), system-ui, sans-serif;
+  --shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 16px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 30px rgba(15, 23, 42, 0.1);
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
   body {
-    @apply antialiased text-gray-900;
+    @apply bg-slate-50 text-slate-700 antialiased;
+    font-family: var(--font-sans);
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans);
+    @apply font-bold tracking-tight text-slate-900;
   }
 
   html[dir="rtl"] .rtl-flip {
@@ -18,30 +38,153 @@
 }
 
 @layer utilities {
-  .fade-in {
-    animation: fade 0.8s ease-in-out;
+  .page-bg {
+    @apply min-h-screen bg-slate-50;
   }
 
-  .edu-card {
-    @apply rounded-3xl border border-gray-200 bg-white shadow-sm transition hover:shadow-md;
+  .edu-container {
+    @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+  }
+
+  /* ── Typography ── */
+  .section-label {
+    @apply mb-2 text-sm font-semibold text-blue-600;
   }
 
   .edu-section-title {
-    @apply text-3xl font-bold tracking-tight text-[#07162d] md:text-4xl;
+    @apply text-3xl font-bold text-slate-900 md:text-4xl;
   }
 
+  .edu-section-subtitle {
+    @apply text-base leading-relaxed text-slate-600;
+  }
+
+  .text-on-dark {
+    @apply text-white;
+  }
+
+  .text-on-dark-muted {
+    @apply text-blue-100;
+  }
+
+  .accent-text {
+    @apply font-bold text-blue-600;
+  }
+
+  /* ── Cards ── */
+  .edu-card {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-[var(--shadow-sm)];
+  }
+
+  .edu-card-hover {
+    @apply rounded-2xl border border-slate-200 bg-white shadow-[var(--shadow-sm)] transition hover:border-blue-200 hover:shadow-[var(--shadow-md)];
+  }
+
+  .scholarship-card {
+    @apply flex h-full flex-col rounded-2xl border border-slate-200 bg-white p-6 shadow-[var(--shadow-sm)] transition hover:border-blue-200 hover:shadow-[var(--shadow-md)];
+  }
+
+  .stat-card {
+    @apply rounded-2xl border border-slate-200 bg-white p-5 shadow-[var(--shadow-sm)];
+  }
+
+  /* ── Page header (solid blue — high contrast) ── */
+  .page-header {
+    @apply bg-blue-600 text-white;
+  }
+
+  .page-header-inner {
+    @apply mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8;
+  }
+
+  .page-header h1,
+  .page-header h2,
+  .page-header h3 {
+    @apply text-white;
+  }
+
+  .page-header p {
+    @apply text-blue-100;
+  }
+
+  /* ── Auth side panel ── */
+  .auth-panel {
+    @apply bg-blue-600 text-white;
+  }
+
+  .auth-panel h1,
+  .auth-panel h2,
+  .auth-panel h3 {
+    @apply text-white;
+  }
+
+  .auth-panel p {
+    @apply text-blue-100;
+  }
+
+  /* ── Badges ── */
   .edu-badge {
-    @apply inline-flex items-center rounded-full border border-orange-400/60 bg-orange-500/10 px-3 py-1 text-xs font-semibold text-orange-600;
+    @apply inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-3 py-1 text-xs font-semibold text-blue-700 ring-1 ring-blue-100;
   }
 
-  @keyframes fade {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
+  .edu-badge-dark {
+    @apply inline-flex items-center gap-1.5 rounded-full bg-white/20 px-3 py-1 text-xs font-semibold text-white;
+  }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg bg-slate-900 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-500 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-300 focus-visible:ring-offset-2;
+  }
+
+  .btn-ghost-light {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border-2 border-white bg-transparent px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/10;
+  }
+
+  /* ── Forms ── */
+  .input-edu {
+    @apply w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 sm:text-base;
+  }
+
+  .label-edu {
+    @apply mb-1.5 block text-sm font-medium text-slate-700;
+  }
+
+  /* ── Nav ── */
+  .nav-link {
+    @apply text-sm font-medium text-slate-600 transition hover:text-blue-600;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar-link {
+    @apply flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition;
+  }
+
+  .sidebar-link-active {
+    @apply bg-blue-600 text-white;
+  }
+
+  .sidebar-link-inactive {
+    @apply text-slate-300 hover:bg-slate-800 hover:text-white;
+  }
+
+  .filter-banner {
+    @apply rounded-lg border border-blue-200 bg-blue-50 px-4 py-3 text-sm text-blue-900;
+  }
+
+  .fade-in {
+    animation: fade-up 0.5s ease-out both;
+  }
+
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 }

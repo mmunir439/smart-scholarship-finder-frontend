@@ -70,33 +70,22 @@ export default function ContactPage() {
     <>
       <Navbar />
 
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-slate-50">
-        {/* HERO */}
-        <section className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mx-auto max-w-3xl text-center"
-            >
-              <span className="inline-flex rounded-full bg-orange-100 px-4 py-1 text-xs font-semibold text-orange-700 sm:text-sm">
-                {t("contact.title")}
-              </span>
-              <h1 className="mt-4 text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
-                {t("contact.subtitle")}
-              </h1>
-              <p className="mt-4 text-sm leading-6 text-slate-600 sm:text-base lg:text-lg">
+      <div className="page-bg min-h-screen">
+        <section className="page-header">
+          <div className="page-header-inner mx-auto max-w-3xl text-center">
+            <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}>
+              <span className="edu-badge-dark">{t("contact.title")}</span>
+              <h1 className="mt-4 text-3xl font-bold text-white sm:text-4xl lg:text-5xl">{t("contact.subtitle")}</h1>
+              <p className="mt-4 text-base leading-relaxed text-blue-100 sm:text-lg">
                 Send a message, ask a question, or request support. We’ll reply as soon as possible.
               </p>
             </motion.div>
           </div>
         </section>
 
-        {/* MAIN */}
-        <main className="mx-auto grid max-w-7xl gap-8 px-4 pb-16 sm:px-6 lg:grid-cols-5 lg:px-8">
-          {/* FORM */}
+        <main className="edu-container grid gap-8 pb-16 lg:grid-cols-5">
           <section className="lg:col-span-3">
-            <div className="rounded-3xl bg-white p-5 shadow-xl ring-1 ring-black/5 sm:p-8">
+            <div className="edu-card p-6 sm:p-8">
               <div className="mb-6 flex items-center justify-between gap-4">
                 <div>
                   <h2 className="text-xl font-semibold text-slate-900 sm:text-2xl">
@@ -122,7 +111,7 @@ export default function ContactPage() {
                       <input
                         value={form.name}
                         onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
+                        className="input-edu"
                         placeholder={t("contact.name")}
                       />
                       {errors.name && <p className="mt-1.5 text-xs text-red-500">{errors.name}</p>}
@@ -136,7 +125,7 @@ export default function ContactPage() {
                         type="email"
                         value={form.email}
                         onChange={(e) => setForm({ ...form, email: e.target.value })}
-                        className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition placeholder:text-slate-400 focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
+                        className="input-edu"
                         placeholder={t("contact.email")}
                       />
                       {errors.email && <p className="mt-1.5 text-xs text-red-500">{errors.email}</p>}
@@ -150,7 +139,7 @@ export default function ContactPage() {
                     <select
                       value={form.subject}
                       onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                      className="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-100"
+                      className="input-edu"
                     >
                       {subjects.map((item) => (
                         <option key={item} value={item}>
@@ -177,7 +166,7 @@ export default function ContactPage() {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="flex w-full items-center justify-center rounded-xl bg-orange-500 px-5 py-3.5 text-sm font-semibold text-white shadow-lg transition hover:bg-orange-600 disabled:cursor-not-allowed disabled:bg-slate-400 sm:text-base"
+                    className="btn-primary w-full disabled:bg-slate-400"
                   >
                     {loading ? t("contact.sending") : t("contact.send")}
                   </button>
@@ -189,18 +178,18 @@ export default function ContactPage() {
           {/* SIDEBAR */}
           <aside className="space-y-5 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-              <div className="rounded-2xl bg-[#0B1437] p-5 text-white shadow-lg">
+              <div className="rounded-2xl bg-blue-600 p-5 text-white">
                 <p className="text-sm font-medium text-orange-300">📧 {t("contact.email_info")}</p>
               </div>
-              <div className="rounded-2xl bg-[#0B1437] p-5 text-white shadow-lg">
+              <div className="rounded-2xl bg-blue-600 p-5 text-white">
                 <p className="text-sm font-medium text-orange-300">🏛️ {t("contact.location")}</p>
               </div>
-              <div className="rounded-2xl bg-[#0B1437] p-5 text-white shadow-lg">
+              <div className="rounded-2xl bg-blue-600 p-5 text-white">
                 <p className="text-sm font-medium text-orange-300">⏰ {t("contact.time")}</p>
               </div>
             </div>
 
-            <div className="rounded-3xl bg-white p-5 shadow-xl ring-1 ring-black/5 sm:p-6">
+            <div className="edu-card p-6 sm:p-8">
               <h3 className="text-lg font-semibold text-slate-900">FAQ</h3>
               <div className="mt-4 space-y-3">
                 <details className="rounded-xl border border-slate-200 p-4">
@@ -221,12 +210,10 @@ export default function ContactPage() {
         </main>
 
         {/* MAP */}
-        <section className="px-4 pb-16 sm:px-6 lg:px-8">
-          <div className="mx-auto max-w-7xl">
-            <div className="rounded-3xl bg-[#0B1437] p-6 text-center text-white shadow-xl sm:p-10">
+        <section className="edu-container pb-16">
+            <div className="page-header rounded-3xl p-8 text-center sm:p-10">
               <p className="text-sm text-orange-300 sm:text-base">📍 {t("contact.map")}</p>
             </div>
-          </div>
         </section>
       </div>
 

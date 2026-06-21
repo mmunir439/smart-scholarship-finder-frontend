@@ -19,7 +19,7 @@ export default function AboutPage() {
     const team = [
         {
             name: "Muhammad Munir",
-            image: "/munir.png",
+            image: "/diinislam.png",
         },
         {
             name: "Diini Isaq Farah",
@@ -38,141 +38,83 @@ export default function AboutPage() {
     const values = [t("about.value1"), t("about.value2"), t("about.value3")];
 
     return (
-        <div className="bg-white text-gray-800">
+        <div className="page-bg">
             <Navbar />
 
-            {/* HERO */}
-            <section className="relative overflow-hidden bg-[#0B1437] px-4 py-16 text-center text-white sm:px-6 sm:py-20 md:px-10 lg:px-16">
-                <div className="mx-auto max-w-4xl">
-                    <motion.h1
-                        {...fadeUp}
-                        className="text-3xl font-serif font-bold leading-tight sm:text-4xl md:text-5xl"
-                    >
+            <section className="page-header text-center">
+                <div className="page-header-inner mx-auto max-w-4xl">
+                    <motion.h1 {...fadeUp} className="text-3xl font-bold leading-tight text-white sm:text-4xl md:text-5xl">
                         {t("about.hero_title")}
                     </motion.h1>
-
-                    <motion.p
-                        {...fadeUp}
-                        className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-gray-300 sm:text-base md:text-lg"
-                    >
+                    <motion.p {...fadeUp} className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-blue-100 sm:text-lg">
                         {t("about.hero_desc")}
                     </motion.p>
                 </div>
-
-                <div className="absolute left-4 top-6 h-16 w-16 rounded-full bg-[#F5A623]/10 sm:left-10 sm:top-10 sm:h-20 sm:w-20" />
-                <div className="absolute bottom-6 right-4 h-12 w-12 rotate-45 rounded-full bg-[#F5A623]/10 sm:bottom-10 sm:right-10 sm:h-16 sm:w-16" />
             </section>
 
-            {/* MISSION */}
-            <section className="mx-auto grid max-w-7xl gap-8 px-4 py-14 sm:px-6 md:grid-cols-2 md:px-10 lg:px-16 lg:py-16">
-                <motion.div
-                    {...fadeUp}
-                    className="border-l-4 border-[#F5A623] pl-4 text-lg italic font-serif leading-relaxed text-gray-900 sm:pl-6 sm:text-xl"
-                >
+            <section className="edu-container grid gap-8 py-14 md:grid-cols-2 lg:py-16">
+                <motion.div {...fadeUp} className="border-l-4 border-blue-600 pl-6 text-lg italic leading-relaxed text-slate-900 sm:text-xl">
                     {t("about.mission_quote")}
                 </motion.div>
-
-                <motion.div
-                    {...fadeUp}
-                    className="space-y-4 text-sm leading-7 text-gray-600 sm:text-base"
-                >
+                <motion.div {...fadeUp} className="space-y-4 text-base leading-7 text-slate-600">
                     <p>{t("about.mission_desc1")}</p>
                     <p>{t("about.mission_desc2")}</p>
                 </motion.div>
             </section>
 
-            {/* PROBLEM SECTION */}
-            <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:px-10 lg:px-16 lg:py-16">
+            <section className="edu-container py-14 lg:py-16">
                 <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
                     {problems.map((item, i) => (
-                        <motion.div
-                            key={i}
-                            {...fadeUp}
-                            className="rounded-2xl bg-[#0B1437] p-5 text-white shadow-md transition hover:-translate-y-1 hover:shadow-lg sm:p-6"
-                        >
-                            <div className="mb-3 text-2xl text-[#F5A623] sm:text-3xl">{item.icon}</div>
-                            <p className="text-sm leading-6 text-gray-100 sm:text-base">{item.text}</p>
+                        <motion.div key={i} {...fadeUp} className="rounded-2xl bg-blue-600 p-6 text-white">
+                            <div className="mb-3 text-3xl">{item.icon}</div>
+                            <p className="text-sm leading-6 text-blue-100 sm:text-base">{item.text}</p>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
-            {/* HOW IT WORKS */}
-            <section className="mx-auto max-w-7xl px-4 py-14 text-center sm:px-6 md:px-10 lg:px-16 lg:py-16">
-                <div className="grid gap-8 md:grid-cols-3 md:gap-6">
+            <section className="edu-container py-14 text-center lg:py-16">
+                <div className="grid gap-8 md:grid-cols-3">
                     {steps.map((step, i) => (
-                        <motion.div key={i} {...fadeUp} className="relative">
-                            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#F5A623] text-sm font-bold text-white shadow-md sm:h-14 sm:w-14 sm:text-base">
+                        <motion.div key={i} {...fadeUp} className="edu-card p-6">
+                            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
                                 {i + 1}
                             </div>
-                            <p className="mx-auto max-w-sm text-sm leading-6 text-gray-700 sm:text-base">
-                                {step}
-                            </p>
-
-                            {i < steps.length - 1 && (
-                                <div className="absolute right-0 top-6 hidden h-px w-full bg-gray-200 md:block" />
-                            )}
+                            <p className="text-sm leading-6 text-slate-600 sm:text-base">{step}</p>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
-            {/* TEAM */}
-            <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:px-10 lg:px-16 lg:py-16">
+            <section className="edu-container py-14 lg:py-16">
                 <div className="grid gap-6 sm:grid-cols-2 lg:justify-items-center">
                     {team.map((member, i) => (
-                        <motion.div
-                            key={i}
-                            {...fadeUp}
-                            className="w-full rounded-2xl bg-white p-6 text-center shadow-md ring-1 ring-black/5 transition hover:-translate-y-1 hover:shadow-lg sm:max-w-sm"
-                        >
-                            <div className="mx-auto mb-4 h-20 w-20 overflow-hidden rounded-full border-2 border-[#F5A623] sm:h-24 sm:w-24">
-                                <img
-                                    src={member.image}
-                                    alt={member.name}
-                                    className="h-full w-full object-cover"
-                                />
+                        <motion.div key={i} {...fadeUp} className="edu-card-hover w-full p-6 text-center sm:max-w-sm">
+                            <div className="mx-auto mb-4 h-24 w-24 overflow-hidden rounded-full ring-4 ring-blue-200">
+                                <img src={member.image} alt={member.name} className="h-full w-full object-cover" />
                             </div>
-
-                            <h3 className="text-base font-semibold text-gray-900 sm:text-lg">
-                                {member.name}
-                            </h3>
-                            <p className="text-sm text-gray-500">{t("about.team_role")}</p>
+                            <h3 className="text-lg font-bold text-slate-900">{member.name}</h3>
+                            <p className="text-sm text-slate-500">{t("about.team_role")}</p>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
-            {/* VALUES */}
-            <section className="mx-auto max-w-7xl px-4 py-14 sm:px-6 md:px-10 lg:px-16 lg:py-16">
+            <section className="edu-container py-14 lg:py-16">
                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                     {values.map((value, i) => (
-                        <motion.div
-                            key={i}
-                            {...fadeUp}
-                            className="rounded-2xl border border-gray-200 bg-white p-6 text-center shadow-sm transition hover:-translate-y-1 hover:shadow-md sm:p-7"
-                        >
-                            <h3 className="mb-2 text-lg font-semibold text-gray-900 sm:text-xl">
-                                {value}
-                            </h3>
-                            <p className="text-sm leading-6 text-gray-500 sm:text-base">
-                                {t("about.value_desc")}
-                            </p>
+                        <motion.div key={i} {...fadeUp} className="edu-card-hover p-7 text-center">
+                            <h3 className="mb-2 text-xl font-bold text-slate-900">{value}</h3>
+                            <p className="text-sm leading-6 text-slate-500 sm:text-base">{t("about.value_desc")}</p>
                         </motion.div>
                     ))}
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="bg-[#0B1437] px-4 py-14 text-center text-white sm:px-6 md:px-10 lg:px-16">
-                <div className="mx-auto max-w-3xl">
-                    <h2 className="text-xl font-semibold sm:text-2xl">
-                        {t("about.cta_title")}
-                    </h2>
-
-                    <GetStartedLink className="mt-6 inline-flex rounded-md bg-[#F5A623] px-6 py-3 text-sm font-semibold text-white transition hover:opacity-90 sm:text-base">
-                        {t("about.cta_btn")}
-                    </GetStartedLink>
+            <section className="page-header text-center">
+                <div className="page-header-inner mx-auto max-w-3xl">
+                    <h2 className="text-2xl font-bold text-white sm:text-3xl">{t("about.cta_title")}</h2>
+                    <GetStartedLink className="btn-primary mt-6">{t("about.cta_btn")}</GetStartedLink>
                 </div>
             </section>
 

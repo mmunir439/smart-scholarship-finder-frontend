@@ -1,9 +1,9 @@
-/** Visual wrapper for login/register split layouts — styling only */
+/** Visual wrapper for login/register split layouts */
 
 export function AuthPage({ children }) {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-orange-50/50">
-      <div className="mx-auto flex min-h-[calc(100vh-140px)] max-w-7xl items-center px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <div className="page-bg">
+      <div className="edu-container flex min-h-[calc(100vh-140px)] items-center py-8 sm:py-10">
         {children}
       </div>
     </div>
@@ -12,7 +12,7 @@ export function AuthPage({ children }) {
 
 export function AuthCard({ children }) {
   return (
-    <div className="grid w-full overflow-hidden rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 lg:grid-cols-2">
+    <div className="grid w-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[var(--shadow-lg)] lg:grid-cols-2">
       {children}
     </div>
   );
@@ -20,15 +20,16 @@ export function AuthCard({ children }) {
 
 export function AuthHeroPanel({ children, className = "" }) {
   return (
-    <div
-      className={`relative overflow-hidden bg-gradient-to-br from-[#07162d] via-[#0b2447] to-orange-600 p-6 text-white lg:flex lg:flex-col lg:justify-between xl:p-12 ${className}`}
-    >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.12),transparent_40%)]" />
-      <div className="relative">{children}</div>
+    <div className={`auth-panel flex flex-col justify-between p-6 lg:p-10 xl:p-12 ${className}`}>
+      {children}
     </div>
   );
 }
 
 export function AuthFormPanel({ children }) {
-  return <div className="p-5 sm:p-8 lg:p-10">{children}</div>;
+  return (
+    <div className="flex flex-col justify-center bg-white p-6 sm:p-8 lg:p-10">
+      {children}
+    </div>
+  );
 }

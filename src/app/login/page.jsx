@@ -99,7 +99,7 @@ export default function Login() {
                   <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
                     {t("login.welcome_title")}
                   </h1>
-                  <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
+                  <p className="mt-4 max-w-md text-base text-blue-100 xl:text-lg">
                     {t("login.welcome_desc")}
                   </p>
                 </div>
@@ -115,7 +115,7 @@ export default function Login() {
                 </button>
               </div>
 
-              <div className="mt-10 space-y-3 text-sm text-orange-100">
+              <div className="mt-10 space-y-3 text-sm text-blue-100">
                 <div className="flex items-center gap-3">
                   <span className="h-2.5 w-2.5 rounded-full bg-white" />
                   {t("login.feature1")}

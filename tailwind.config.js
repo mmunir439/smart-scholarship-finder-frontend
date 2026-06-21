@@ -2,17 +2,11 @@ export default {
   theme: {
     extend: {
       colors: {
-        navy: "#07162d",
-        "navy-light": "#0b2447",
-        gold: "#F5A623",
-        light: "#F8FAFC",
-        graySoft: "#E5E7EB",
+        primary: "#2563eb",
+        "primary-dark": "#1d4ed8",
       },
       fontFamily: {
-        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
-      },
-      boxShadow: {
-        edu: "0 10px 40px -12px rgba(7, 22, 45, 0.15)",
+        sans: ["var(--font-plus-jakarta)", "system-ui", "sans-serif"],
       },
     },
   },

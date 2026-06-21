@@ -48,7 +48,7 @@ export default function LanguageSwitcher({ className = "" }) {
       onChange={handleChange}
       disabled={syncing}
       aria-label="Select language"
-      className={`cursor-pointer rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-sm font-medium text-gray-700 shadow-sm outline-none transition hover:border-orange-300 focus:border-orange-500 focus:ring-2 focus:ring-orange-100 disabled:opacity-60 ${className}`}
+      className={`input-edu cursor-pointer px-2.5 py-1.5 text-sm font-medium disabled:opacity-60 ${className}`}
     >
       {LANGUAGES.map(({ code, label }) => (
         <option key={code} value={code}>

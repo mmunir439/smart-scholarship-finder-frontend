@@ -6,68 +6,46 @@ import { useTranslation } from "react-i18next";
 import { FiShield, FiUser } from "react-icons/fi";
 
 export default function AdminNavbar() {
-    const { t } = useTranslation();
+  const { t } = useTranslation();
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    axios.get("/user/getCurrentUser")
+      .then((res) => setUser(res.data?.user ?? res.data ?? null))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
+  }, []);
 
-    const getUser = async () => {
-        try {
-            const res = await axios.get("/user/getCurrentUser");
-            setUser(res.data?.user ?? res.data ?? null);
-        } catch (error) {
-            console.log(error);
-            setUser(null);
-        } finally {
-            setLoading(false);
-        }
-    };
+  const initials = useMemo(() => {
+    const name = user?.name || "Admin";
+    return name.split(" ").filter(Boolean).map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  }, [user]);
 
-    useEffect(() => {
-        getUser();
-    }, []);
+  return (
+    <header className="flex items-center justify-between border-b border-slate-200 bg-white px-6 py-4">
+      <div>
+        <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Admin Panel</p>
+        <p className="text-lg font-bold text-slate-900">
+          {loading ? "Loading..." : `Welcome, ${user?.name || "Admin"}`}
+        </p>
+      </div>
 
-    const initials = useMemo(() => {
-        const name = user?.name || "Admin";
-        return name
-            .split(" ")
-            .filter(Boolean)
-            .map((part) => part[0])
-            .join("")
-            .slice(0, 2)
-            .toUpperCase();
-    }, [user]);
-
-    return (
-        <header className="bg-white/90 backdrop-blur border-b border-gray-200 px-6 py-4 flex items-center justify-between">
-            <div>
-                <h2 className="text-sm font-medium text-gray-500">Admin Panel</h2>
-                <p className="text-lg font-semibold text-gray-900">
-                    {loading ? "Loading..." : `Welcome, ${user?.name || "Admin"}`}
-                </p>
-            </div>
-
-            <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 px-3 py-2 rounded-full bg-orange-50 border border-orange-100">
-                    <FiShield className="text-orange-500" />
-                    <span className="text-sm font-medium text-orange-700 capitalize">
-                        {loading ? "..." : user?.role || "admin"}
-                    </span>
-                </div>
-
-                <div className="w-10 h-10 rounded-full bg-orange-500 text-white flex items-center justify-center font-semibold">
-                    {loading ? <FiUser /> : initials}
-                </div>
-
-                <div className="hidden sm:block">
-                    <p className="text-sm font-medium text-gray-900">
-                        {loading ? "Loading..." : t(user?.name || "Admin")}
-                    </p>
-                    <p className="text-xs text-gray-500">
-                        {user?.email || "admin@smartscholarship.com"}
-                    </p>
-                </div>
-            </div>
-        </header>
-    );
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 rounded-full bg-blue-50 px-3 py-1.5 ring-1 ring-blue-100">
+          <FiShield className="text-blue-600" />
+          <span className="text-sm font-semibold capitalize text-blue-800">
+            {loading ? "..." : user?.role || "admin"}
+          </span>
+        </div>
+        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-blue-600 text-sm font-bold text-white">
+          {loading ? <FiUser /> : initials}
+        </div>
+        <div className="hidden sm:block">
+          <p className="text-sm font-semibold text-slate-900">{loading ? "..." : user?.name || "Admin"}</p>
+          <p className="text-xs text-slate-500">{user?.email || "admin@smartscholarship.com"}</p>
+        </div>
+      </div>
+    </header>
+  );
 }

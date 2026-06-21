@@ -60,7 +60,7 @@ export default function ForgotPasswordPage() {
               <h1 className="max-w-lg text-4xl font-bold leading-tight xl:text-5xl">
                 {t("forgotPassword.hero_title")}
               </h1>
-              <p className="mt-4 max-w-md text-base text-orange-100 xl:text-lg">
+              <p className="mt-4 max-w-md text-base text-blue-100 xl:text-lg">
                 {t("forgotPassword.hero_desc")}
               </p>
             </div>
