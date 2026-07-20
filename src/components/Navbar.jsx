@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import { removeToken } from "@/app/utils/token";
 import { useAccessibility } from "@/context/AccessibilityContext";
 import { useScholarshipPreferences } from "@/hooks/useScholarshipPreferences";
-import { stopSpeaking } from "@/app/utils/voiceAssistant";
+
 
 export default function Navbar() {
   const router = useRouter();
@@ -56,7 +56,7 @@ export default function Navbar() {
   }, []);
 
   const handleLogout = () => {
-    try { removeToken(); localStorage.removeItem("user"); } catch {}
+    try { removeToken(); localStorage.removeItem("user"); } catch { }
     stopSpeaking();
     resetAccessibility();
     resetScholarshipPrefs();

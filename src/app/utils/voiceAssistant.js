@@ -1,38 +1,34 @@
-import {
-  getSpeechLangTagForTTS,
-  isTTSEnabled,
-} from "@/lib/accessibilityState";
+"use client";
 
-export { isTTSEnabled };
+/**
+ * Central Text-to-Speech utility.
+ * Single source of truth — do not create a second copy of this file.
+ */
 
-export const isSpeechSupported = () => {
-  return typeof window !== "undefined" && "speechSynthesis" in window;
-};
-
-const safeSynthesis = () => (isSpeechSupported() ? window.speechSynthesis : null);
-
-let utterance = null;
+let currentUtterance = null;
 let isPaused = false;
 let isSpeaking = false;
 
-function resolveSpeechLang(lang) {
-  if (lang) return lang;
-  return getSpeechLangTagForTTS();
-}
+export const isSpeechSupported = () =>
+  typeof window !== "undefined" && "speechSynthesis" in window;
 
-export const speak = (text, lang, onEnd) => {
-  const synth = safeSynthesis();
-  if (!synth || !isTTSEnabled()) return;
-  if (isPaused) return;
+const getSynth = () => (isSpeechSupported() ? window.speechSynthesis : null);
+
+/**
+ * Speak the given text. Always interrupts whatever was playing before.
+ */
+export const speak = (text, lang = "en-US", onEnd) => {
+  const synth = getSynth();
+  if (!synth || !text) return;
 
   try {
     synth.cancel();
-  } catch {
-    /* ignore */
-  }
+  } catch (e) {}
 
-  utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = resolveSpeechLang(lang);
+  isPaused = false;
+
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang = lang;
   utterance.rate = 1;
   utterance.pitch = 1;
 
@@ -44,54 +40,49 @@ export const speak = (text, lang, onEnd) => {
   utterance.onend = () => {
     isSpeaking = false;
     isPaused = false;
-    utterance = null;
+    currentUtterance = null;
     if (typeof onEnd === "function") onEnd();
   };
 
   utterance.onerror = () => {
     isSpeaking = false;
     isPaused = false;
-    utterance = null;
+    currentUtterance = null;
   };
 
+  currentUtterance = utterance;
   synth.speak(utterance);
 };
 
 export const pauseSpeaking = () => {
-  const synth = safeSynthesis();
+  const synth = getSynth();
   if (!synth) return;
   if (synth.speaking && !synth.paused) {
     try {
       synth.pause();
-    } catch {
-      /* ignore */
-    }
+    } catch (e) {}
     isPaused = true;
   }
 };
 
 export const resumeSpeaking = () => {
-  const synth = safeSynthesis();
+  const synth = getSynth();
   if (!synth) return;
   if (synth.paused) {
     try {
       synth.resume();
-    } catch {
-      /* ignore */
-    }
+    } catch (e) {}
     isPaused = false;
   }
 };
 
 export const stopSpeaking = () => {
-  const synth = safeSynthesis();
+  const synth = getSynth();
   if (!synth) return;
   try {
     synth.cancel();
-  } catch {
-    /* ignore */
-  }
-  utterance = null;
+  } catch (e) {}
+  currentUtterance = null;
   isPaused = false;
   isSpeaking = false;
 };
